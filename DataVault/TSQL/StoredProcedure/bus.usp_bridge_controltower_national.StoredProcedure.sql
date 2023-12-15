@@ -7,7 +7,7 @@ CREATE     PROCEDURE [bus].[usp_bridge_controltower_national] AS
 
 -- exec bus.usp_bridge_controltower_national
 
---select * from bus.bridge_controltower_national WHERE test_no like 'L1606994%' ORDER BY SAMPLE_NO, product_code
+--select * from bus.bridge_controltower_national WHERE test_no like 'L1606988%' ORDER BY SAMPLE_NO, product_code
 
  if object_id('bus.bridge_controltower_national') is not null DROP TABLE bus.bridge_controltower_national
 SELECT   l_test_product.hk_l_test_product AS hk_l_test_product
