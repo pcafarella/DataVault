@@ -1,0 +1,52 @@
+/****** Object:  Table [psa].[load_sampheader_national]    Script Date: 12/15/2023 2:12:46 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [psa].[load_sampheader_national](
+	[samp_joinid] [nvarchar](20) NULL,
+	[audit_seq] [decimal](12, 2) NULL,
+	[samplenum] [nvarchar](50) NULL,
+	[samp_tag] [nvarchar](10) NULL,
+	[loginnum] [nvarchar](10) NULL,
+	[login_seq] [decimal](12, 2) NULL,
+	[list_joinid] [nvarchar](20) NULL,
+	[snapshot_flag] [nvarchar](1) NULL,
+	[dkey_flag] [nvarchar](1) NULL,
+	[parm_validate_flag] [nvarchar](1) NULL,
+	[dkey_cnt] [decimal](12, 2) NULL,
+	[pchain_id] [nvarchar](20) NULL,
+	[calcid] [nvarchar](20) NULL,
+	[process_step] [decimal](12, 2) NULL,
+	[process_id] [nvarchar](30) NULL,
+	[nextprocess_id] [nvarchar](30) NULL,
+	[process_status] [nvarchar](1) NULL,
+	[process_message] [nvarchar](100) NULL,
+	[reqavail_flag] [nvarchar](1) NULL,
+	[calcavail_flag] [nvarchar](1) NULL,
+	[approval_status] [nvarchar](4) NULL,
+	[galp_id] [decimal](12, 2) NULL,
+	[input_seq] [decimal](12, 2) NULL,
+	[inputdate] [datetime2](7) NULL,
+	[samp_type] [nvarchar](20) NULL,
+	[run_id] [nvarchar](20) NULL,
+	[link_id] [nvarchar](20) NULL,
+	[enterdate] [datetime2](7) NULL,
+	[prep_date1] [datetime2](7) NULL,
+	[prep_date2] [datetime2](7) NULL,
+	[measuredate] [datetime2](7) NULL,
+	[rptremarks] [nvarchar](100) NULL,
+	[comments] [nvarchar](90) NULL,
+	[lastdate] [datetime2](7) NULL,
+	[lastuser] [nvarchar](20) NULL,
+	[lasttool] [nvarchar](20) NULL,
+	[analysis_type] [nvarchar](10) NULL,
+	[analysis_count] [decimal](12, 2) NULL,
+	[rpt_mdl] [nchar](1) NULL,
+	[virtual_set] [decimal](12, 2) NULL,
+	[worknum] [nvarchar](20) NULL,
+	[tic] [decimal](12, 2) NULL,
+	[dss_record_source] [nvarchar](255) NULL,
+	[dss_load_date] [datetime2](7) NULL
+) ON [PRIMARY]
+GO
