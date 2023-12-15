@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32126.315
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "DataVault", "DataVault\DataVault.dtproj", "{0BD85094-A77F-4E7F-B225-B10BCD06DAD3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Development|Default = Development|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0BD85094-A77F-4E7F-B225-B10BCD06DAD3}.Development|Default.ActiveCfg = Development
+		{0BD85094-A77F-4E7F-B225-B10BCD06DAD3}.Development|Default.Build.0 = Development
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {00F219FD-9594-4F7A-B14D-143B5431EA68}
+	EndGlobalSection
+EndGlobal
