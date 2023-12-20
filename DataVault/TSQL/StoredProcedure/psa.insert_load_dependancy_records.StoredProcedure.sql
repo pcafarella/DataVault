@@ -1,4 +1,4 @@
-/****** Object:  StoredProcedure [psa].[insert_load_dependancy_records]    Script Date: 12/15/2023 2:05:50 PM ******/
+/****** Object:  StoredProcedure [psa].[insert_load_dependancy_records]    Script Date: 12/20/2023 12:55:46 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -34,13 +34,9 @@ AND EXISTS (SELECT 1 FROM load.load_orderdetail_national i WHERE i.samplenum = p
 INSERT load.load_sample_national
 SELECT * FROM psa.load_sample_national_v psa
 WHERE NOT EXISTS (SELECT 1 FROM load.load_sample_national i WHERE i.samplenum = psa.samplenum )
-AND EXISTS (SELECT 1 FROM load.load_sampheader_national i WHERE i.samplenum = psa.samplenum )
-
-INSERT load.load_sample_national
-SELECT * FROM psa.load_sample_national_v psa
-WHERE NOT EXISTS (SELECT 1 FROM load.load_sample_national i WHERE i.samplenum = psa.samplenum )
-AND EXISTS (SELECT 1 FROM load.load_lims_audit_national i WHERE i.key_value  = psa.samplenum AND audit_action = 'UPDATE')
-
+AND EXISTS (SELECT 1 FROM load.load_sampheader_national i WHERE i.samplenum = psa.samplenum 
+			UNION ALL
+			SELECT 1 FROM load.load_lims_audit_national i WHERE i.key_value  = psa.samplenum AND audit_action = 'UPDATE')
 
 INSERT load.load_rundef_national  
 SELECT * FROM psa.load_rundef_national_v psa
@@ -55,15 +51,8 @@ AND EXISTS (SELECT 1 FROM load.load_sampheader_national i WHERE i.list_joinid = 
 INSERT load.load_invoicedef_national
 SELECT * FROM psa.load_invoicedef_national_v psa
 WHERE NOT EXISTS (SELECT 1 FROM load.load_invoicedef_national i WHERE i.invoicenum = psa.invoicenum )
-AND EXISTS (SELECT 1 FROM load.load_invoicedef_national i WHERE i.invoicenum = psa.invoicenum
-            UNION ALL
-			SELECT 1 FROM load.load_invoicedef_national i WHERE i.invoicenum = psa.invoicenum)
+AND EXISTS (SELECT 1 FROM load.load_sample_national i WHERE i.invoicenum = psa.invoicenum)
 
 
-
-
---select * from load.load_orderdetail_national where samplenum = 'L1629503-02'
-
---select * from load.load_ordermast_national where samplenum = 'L1629503-02'
  RETURN
 GO

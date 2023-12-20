@@ -1,4 +1,4 @@
-/****** Object:  View [info].[fact_controltower_ap3_compare_v]    Script Date: 12/15/2023 2:09:16 PM ******/
+/****** Object:  View [info].[fact_controltower_ap3_compare_v]    Script Date: 12/20/2023 12:55:46 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8,10 +8,11 @@ GO
 
 
 
+
  
  
 
-CREATE                                                      VIEW [info].[fact_controltower_ap3_compare_v] AS   
+CREATE                                                        VIEW [info].[fact_controltower_ap3_compare_v] AS   
 
 --select top 100 * from [info].[fact_controltower_ap3_compare_v]
 
@@ -88,6 +89,7 @@ SELECT work_order_no [Work Order Nbr]
 	FROM info.fact_controltower_national_ap2 o
 	JOIN mas.lab_reporting_group g on g.list_type = o.analysis_process_code and g.list_matclass = o.analysis_process_code_bkcc
 	WHERE LEFT(analysis_process_code,3) != 'ALL'
+	  AND [login_dept_avail_date] >= '2023-09-17'
 	  AND (CAST(analysis_dept_done_status_date AS DATE) IS NULL OR CAST(analysis_dept_done_status_date AS DATE) =  DATEADD(dd,-1,CAST(getdate() AS DATE)))
 
 GO
