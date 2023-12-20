@@ -1,0 +1,17 @@
+15;wsl_hive_block_insert
+16;wsl_hive_utility_dml
+17;wsl_pdw_procedure_ctas
+18;wsl_pdw_procedure_ctas_with_union
+19;wsl_pdw_procedure_update_insert
+20;wsl_pdw_utility_dml
+21;wsl_common_powershellscript_stub
+22;wsl_sqlserver_proc_stage
+23;wsl_sqlserver_utility_dml
+24;wsl_sqlserver_proc_dv_perm
+25;wsl_sqlserver_proc_dv_stage
+26;wsl_sqlserver_utility_dv
+27;wsl_sqlserver_proc_fact_set
+30;pace_wsl_sqlserver_ddl_createtable
+31;wsl_sqlserver_proc_dv_perm_sha256
+32;wsl_sqlserver_proc_dv_stage_sha256
+33;wsl_sqlserver_utility_dv_sha256
