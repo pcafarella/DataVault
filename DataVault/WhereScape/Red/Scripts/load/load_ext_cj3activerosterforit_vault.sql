@@ -1,0 +1,33 @@
+Truncate table WSDataVault_dev_incremental.load.load_ext_cj3activerosterforit_vault;
+Insert /*+ APPEND */ into WSDataVault_dev_incremental.load.load_ext_cj3activerosterforit_vault
+(
+payroll_company_code
+,legal_first_name
+,legal_last_name
+,file_number
+,home_department_code
+,home_department_description
+,reports_to_legal_first_name
+,reports_to_legal_last_name
+,reports_to_file_number
+,business_unit_description
+,dss_record_source
+,dss_load_date
+)
+Select ext_CJ3ActiveRosterforIT.payroll_company_code
+,ext_CJ3ActiveRosterforIT.legal_first_name
+,ext_CJ3ActiveRosterforIT.legal_last_name
+,ext_CJ3ActiveRosterforIT.file_number
+,ext_CJ3ActiveRosterforIT.home_department_code
+,ext_CJ3ActiveRosterforIT.home_department_description
+,ext_CJ3ActiveRosterforIT.reports_to_legal_first_name
+,ext_CJ3ActiveRosterforIT.reports_to_legal_last_name
+,ext_CJ3ActiveRosterforIT.reports_to_file_number
+,ext_CJ3ActiveRosterforIT.business_unit_description
+,''
+,''
+From
+ext.ext_CJ3ActiveRosterforIT ext_CJ3ActiveRosterforIT;
+UPDATE WSDataVault_dev_incremental.load.load_ext_cj3activerosterforit_vault SET dss_record_source = 'Vault.ext.ext_CJ3ActiveRosterforIT'
+,dss_load_date = getdate()
+ WHERE dss_load_date IS NULL;

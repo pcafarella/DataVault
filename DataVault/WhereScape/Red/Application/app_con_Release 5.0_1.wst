@@ -1,0 +1,15 @@
+551;WADP Personal
+1;DDataWarehouse
+570;OExternalLoad
+29;OMasterData
+28;ONational
+569;DPacePort
+2;DTutorial (OLTP)
+757;OVault
+3;WWindows
+_WS&TARGET_load;1;1;2;WSDataVault_dev_incremental;load;;;TGTCOLOR=000000000;
+_WS&TARGET_stage;2;1;2;WSDataVault_dev_incremental;stage;;;TGTCOLOR=000000000;
+_WS&TARGET_ref;3;1;2;WSDataVault_dev_incremental;ref;;;TGTCOLOR=000000000;
+_WS&TARGET_raw;4;1;2;WSDataVault_dev_incremental;raw;;;TGTCOLOR=000000000;
+_WS&TARGET_Business Vault;5;1;2;WSDataVault_dev_incremental;bus;;;TGTCOLOR=000000000;
+_WS&TARGET_external;6;1;2;;ext;;;TGTCOLOR=000000000;
