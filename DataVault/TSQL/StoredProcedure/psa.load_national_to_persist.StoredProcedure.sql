@@ -1,4 +1,4 @@
-/****** Object:  StoredProcedure [psa].[load_national_to_persist]    Script Date: 12/15/2023 2:05:50 PM ******/
+/****** Object:  StoredProcedure [psa].[load_national_to_persist]    Script Date: 12/20/2023 12:55:46 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -652,9 +652,7 @@ SELECT [acctnum]
   --where lastdate > dss_parameter_value
  
 
-
-
-INSERT INTO [load].[load_vw_sdg_details_national]
+INSERT INTO [psa].[load_vw_sdg_details_national]
            ([loginnum]
            ,[sdgid]
            ,[receivedate]
