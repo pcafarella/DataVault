@@ -1,4 +1,4 @@
-/****** Object:  StoredProcedure [info].[usp_fact_controltower_national]    Script Date: 12/15/2023 2:05:50 PM ******/
+/****** Object:  StoredProcedure [info].[usp_fact_controltower_national]    Script Date: 12/21/2023 7:17:18 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7,7 +7,7 @@ GO
 --  drop table info.fact_controltower_national
  
  
-CREATE                 PROCEDURE [info].[usp_fact_controltower_national] @work_order_no varchar(50) = NULL
+CREATE OR ALTER                 PROCEDURE [info].[usp_fact_controltower_national] @work_order_no varchar(50) = NULL
 AS 
 
 -- exec info.usp_fact_controltower_national  'L1667095'
@@ -66,7 +66,7 @@ INTO #batch_status
 UNION ALL
 SELECT 'CAPT',2
 UNION ALL
-SELECT 'WIP',1
+SELECT 'WIP',3
 UNION ALL
 SELECT 'WG',4
 UNION ALL
@@ -166,39 +166,19 @@ INNER JOIN raw.h_test  ON h_test.test_no LIKE t.sample_no + '|'+ t.product_code_
 INNER JOIN raw.l_department_test_schedule sh ON sh.hk_h_test =  h_test.hk_h_test and sh.hk_h_department =  td.hk_h_department 
 INNER JOIN raw.s_department_test_schedule_hroc_national sc on sc.hk_l_department_test_schedule = sh.hk_l_department_test_schedule) a
 WHERE rank_no = 1 
-	 
--- set analytical department count
-UPDATE #test
-SET dept_type3_cnt = (SELECT count(distinct d.department_no) from #test_department d JOIN mas.department_type t ON d.department_no = t.department_no and t.department_level = 3 WHERE d.hk_h_test = #test.hk_h_test)
-
--- flip wet chem analytical to prep
-UPDATE td
-SET hk_h_test = td.hk_h_test,  hk_h_department = h.hk_h_department, department_no = h.department_no
-FROM #test_department_batch td
-INNER JOIN #test t on t.hk_h_test = td.hk_h_test and t.dept_type3_cnt > 1
-INNER JOIN raw.h_department h on h.department_no = 23 and tenant_id = 'lims80'
-WHERE t.matnum_base = 5 AND td.department_no = 2 
-
-UPDATE td
-SET hk_h_test = td.hk_h_test,  hk_h_department = h.hk_h_department, department_no = h.department_no
-FROM #test_department_batch td
-INNER JOIN #test t on t.hk_h_test = td.hk_h_test and t.dept_type3_cnt > 1
-INNER JOIN raw.h_department h on h.department_no = 23 and tenant_id = 'lims80'
-WHERE  t.matnum_base = 4  AND (t.product_code_base like '%TCLPEXT' OR t.product_code_base like '%TCLPZHE')  
-and td.department_no = 2
 
 SELECT  tdb.hk_h_test, tdb.test_no, tdb.hk_h_department , tdb.department_no, ts.process_status_code, ts.process_status_date, COALESCE(s.process_status_batch_no ,'') process_status_batch_no,
          ts.hk_l_department_test_status, batch_status_rank
 		,row_number() OVER (PARTITION BY tdb.hk_h_test,  tdb.test_no, tdb.test_no_bkcc, tdb.hk_h_department, h_department.department_no, s.process_status_batch_no ORDER BY ts.process_status_date DESC) batch_status_date_rank
 		,row_number() OVER (PARTITION BY tdb.hk_h_test, tdb.test_no, tdb.test_no_bkcc, tdb.hk_h_department, h_department.department_no, s.process_status_batch_no, ts.process_status_date ORDER BY batch_status_rank) batch_status_date_dup_row_no 
-INTO #batch_status_rank 
+INTO #batch_status_rank
 FROM #test_department_batch tdb
 INNER JOIN raw.l_test_product tp on tp.hk_h_test = tdb.hk_h_test
 INNER JOIN raw.l_analysis_process_product app ON app.hk_h_analysis_process = tdb.hk_h_analysis_process and app.hk_h_product = tp.hk_h_product
 INNER JOIN raw.h_product p on p.hk_h_product = app.hk_h_product
-INNER JOIN mas.department_type d on d.department_no=tdb.department_no
-INNER JOIN raw.h_department on h_department.hk_h_department = ISNULL(NULLIF(tdb.hk_h_department,'B2B72157DA65430DA39D80EB22AC6342D3F4B41784AA95BCAA8C0BEEAE545BD7' ),'455A614E8D94FF7B254E77B98F0BF437A6720FE25A13D88E5023D3A5F2E50253')
-LEFT JOIN raw.l_department_test_status ts on ts.hk_h_test = tdb.hk_h_test AND ts.hk_h_department = h_department.hk_h_department
+INNER JOIN raw.h_department on h_department.hk_h_department = tdb.hk_h_department
+INNER JOIN mas.department_type d on d.department_no = h_department.department_no
+LEFT JOIN raw.l_department_test_status ts on ts.hk_h_test = tdb.hk_h_test AND ts.hk_h_department = tdb.hk_h_department 
 LEFT JOIN bus.s_department_test_status_tran_national_current s on s.hk_l_department_test_status = ts.hk_l_department_test_status  and isnull(s.process_status_batch_no,'')  = tdb.process_status_batch_no
 LEFT JOIN #batch_status ON #batch_status.process_status_code = ts.process_status_code 
 WHERE s.lasttool != 'PREPLOGINTOOL'
@@ -312,6 +292,25 @@ WHERE account_no != 'DELETE'
 AND NOT EXISTS (SELECT 1 FROM ref.r_seedpak_trans tr WHERE application = 'INTRNL_RPT' and  specific = 'EXCLUDE_ACCOUNT' and  column_name = 'ACCTNUM' and tr.from_value =  account_no )
 GROUP BY  tdb.hk_h_test, hk_h_work_order, customer.hk_h_customer, invoice.hk_h_invoice, account_no, pace_account.hk_h_pace_account , test_no
 CREATE INDEX tmp_singlelink ON #singlelink (hk_h_test)
+
+UPDATE #test
+SET dept_type3_cnt = (SELECT count(distinct d.department_no) from #test_department d JOIN mas.department_type t ON d.department_no = t.department_no and t.department_level = 3 WHERE d.hk_h_test = #test.hk_h_test)
+
+-- flip wet chem analytical to prep
+UPDATE td
+SET hk_h_test = td.hk_h_test,  hk_h_department = h.hk_h_department, department_no = h.department_no
+FROM #test_department_batch td
+INNER JOIN #test t on t.hk_h_test = td.hk_h_test and t.dept_type3_cnt > 1
+INNER JOIN raw.h_department h on h.department_no = 23 and tenant_id = 'lims80'
+WHERE t.matnum_base = 5 AND td.department_no = 2 
+
+UPDATE td
+SET hk_h_test = td.hk_h_test,  hk_h_department = h.hk_h_department, department_no = h.department_no
+FROM #test_department_batch td
+INNER JOIN #test t on t.hk_h_test = td.hk_h_test and t.dept_type3_cnt > 1
+INNER JOIN raw.h_department h on h.department_no = 23 and tenant_id = 'lims80'
+WHERE  t.matnum_base = 4  AND (t.product_code_base like '%TCLPEXT' OR t.product_code_base like '%TCLPZHE')  
+and td.department_no = 2
 
 SELECT w.work_order_no, 
         batch_grain.sample_no, 
