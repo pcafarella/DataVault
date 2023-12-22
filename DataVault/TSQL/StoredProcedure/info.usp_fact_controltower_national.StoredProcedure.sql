@@ -7,7 +7,7 @@ GO
 --  drop table info.fact_controltower_national
  
  
-CREATE OR ALTER                 PROCEDURE [info].[usp_fact_controltower_national] @work_order_no varchar(50) = NULL
+CREATE                 PROCEDURE [info].[usp_fact_controltower_national] @work_order_no varchar(50) = NULL
 AS 
 
 -- exec info.usp_fact_controltower_national  'L1667095'
