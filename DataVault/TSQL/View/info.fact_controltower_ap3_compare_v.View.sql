@@ -5,6 +5,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 
  
+ If object_id('info.fact_controltower_ap3_compare_v') iS NOT NULL
+	DROP VIEW [info].[fact_controltower_ap3_compare_v] 
+ GO
 
 CREATE                                                         VIEW [info].[fact_controltower_ap3_compare_v] AS   
 
@@ -83,8 +86,8 @@ SELECT work_order_no [Work Order Nbr]
 	FROM info.fact_controltower_national_ap2 o
 	INNER JOIN mas.lab_reporting_group g on g.list_type = o.analysis_process_code and g.list_matclass = o.analysis_process_code_bkcc
 	WHERE LEFT(analysis_process_code,3) != 'ALL'
-	  AND [login_dept_avail_date] >= '2023-09-17'
+	  AND [login_dept_avail_date] >= DATEADD(month, -4, getdate())
 	  AND (CAST(analysis_dept_done_status_date AS DATE) IS NULL OR CAST(analysis_dept_done_status_date AS DATE) =  DATEADD(dd,-1,CAST(getdate() AS DATE)))
-	  AND analysis_department_no IS NOT NULL
-
+	  AND NOT (preprep_department_no = 23 and Analysis_process_code IN ('TCLPEXT' ,'TCLPZHE') )
+ 
 GO
