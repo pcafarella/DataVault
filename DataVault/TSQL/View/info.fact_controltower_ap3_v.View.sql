@@ -20,7 +20,7 @@ FROM info.fact_controltower_adp_v
  
  
 
-CREATE                                        VIEW [info].[fact_controltower_ap3_v] AS   
+CREATE       OR ALTER                                 VIEW [info].[fact_controltower_ap3_v] AS   
 
 --select top 100 * from [info].[fact_controltower_ap3_v]
 
@@ -85,7 +85,7 @@ SELECT work_order_no [Work Order Nbr]
 	  ,analysis_dept_done_status_date [Second Review Complete]
 	  ,CAST(NULL AS VARCHAR)  [Analysis Instrument]
 	  ,CAST(NULL AS VARCHAR) [Location]
-	  ,CAST(NULL AS VARCHAR) [Analysis Dept Attempt Count]
+	  ,CAST(batch_no_cnt AS VARCHAR) [Analysis Dept Attempt Count]
 
 	  ,reporting_department_no [Reporting Dept Nbr]
 	  ,reporting_department_short_name [Reporting Dept Abbrev]
