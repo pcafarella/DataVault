@@ -2,6 +2,7 @@
 DROP PROCEDURE [bus].[usp_bridge_test_invoiceline_national]
 GO
 /****** Object:  StoredProcedure [bus].[usp_bridge_test_invoiceline_national]    Script Date: 1/30/2024 2:45:18 PM ******/
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

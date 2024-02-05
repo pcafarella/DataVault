@@ -1,7 +1,6 @@
 
 IF Object_id('info.usp_fact_controltower_national_ap2') IS NOT NULL
 	DROP PROCEDURE  info.usp_fact_controltower_national_ap2
-GO
 
  CREATE PROCEDURE [info].[usp_fact_controltower_national_ap2]    @work_order_no varchar(50) = NULL -- 'L1577869'-- 'L1632346'--'L1645127'--L1643669'--'L1642261'-- 'L1639141'--'L1641864' -- ='L1642911'-- 'L1642261'---l1641985'  --='L1641864'--'L1638501'--'L1641864'--'L1641017'--'L1636842'  --= 'L1642891'  --'L1629949'-- 'L1622150'--'L1637130' --'L1621899'
 AS 
