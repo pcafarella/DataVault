@@ -1,4 +1,7 @@
-/****** Object:  StoredProcedure [psa].[load_national_to_persist]    Script Date: 12/20/2023 12:55:46 PM ******/
+/****** Object:  StoredProcedure [psa].[load_national_to_persist]    Script Date: 2/5/2024 10:41:23 AM ******/
+DROP PROCEDURE [psa].[load_national_to_persist]
+GO
+/****** Object:  StoredProcedure [psa].[load_national_to_persist]    Script Date: 2/5/2024 10:41:24 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -688,12 +691,55 @@ INSERT INTO [psa].[load_vw_sdg_details_national]
 
   
  
+INSERT INTO [psa].[load_prodmast_national]
+           ([matnum]
+           ,[prod]
+           ,[class]
+           ,[pprodref]
+           ,[pmatnumref]
+           ,[description]
+           ,[methodref]
+           ,[holddays]
+           ,[holdflg]
+           ,[duedays]
+           ,[factorflg]
+           ,[containertype]
+           ,[bottles]
+           ,[lastdate]
+           ,[lasttool]
+           ,[lastuser]
+           ,[costcenter]
+           ,[phasecode]
+           ,[auto_anrev_flag]
+           ,[expiredate]
+           ,[dss_record_source]
+           ,[dss_load_date])
+
+SELECT [matnum]
+      ,[prod]
+      ,[class]
+      ,[pprodref]
+      ,[pmatnumref]
+      ,[description]
+      ,[methodref]
+      ,[holddays]
+      ,[holdflg]
+      ,[duedays]
+      ,[factorflg]
+      ,[containertype]
+      ,[bottles]
+      ,[lastdate]
+      ,[lasttool]
+      ,[lastuser]
+      ,[costcenter]
+      ,[phasecode]
+      ,[auto_anrev_flag]
+      ,[expiredate]
+      ,[dss_record_source]
+      ,[dss_load_date]
+  FROM [load].[load_prodmast_national]
+
 
 
   RETURN
- 
-
-
-
-
 GO

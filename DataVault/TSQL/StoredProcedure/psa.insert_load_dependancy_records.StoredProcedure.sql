@@ -1,4 +1,7 @@
-/****** Object:  StoredProcedure [psa].[insert_load_dependancy_records]    Script Date: 12/20/2023 12:55:46 PM ******/
+/****** Object:  StoredProcedure [psa].[insert_load_dependancy_records]    Script Date: 2/5/2024 10:41:23 AM ******/
+DROP PROCEDURE [psa].[insert_load_dependancy_records]
+GO
+/****** Object:  StoredProcedure [psa].[insert_load_dependancy_records]    Script Date: 2/5/2024 10:41:24 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

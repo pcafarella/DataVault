@@ -1,25 +1,19 @@
-/****** Object:  StoredProcedure [info].[usp_capture_fact_controltower_ap3_history]    Script Date: 2/5/2024 10:41:23 AM ******/
-DROP PROCEDURE [info].[usp_capture_fact_controltower_ap3_history]
+/****** Object:  StoredProcedure [info].[fact_controltower_fact_history]    Script Date: 2/5/2024 10:41:23 AM ******/
+DROP PROCEDURE [info].[fact_controltower_fact_history]
 GO
-/****** Object:  StoredProcedure [info].[usp_capture_fact_controltower_ap3_history]    Script Date: 2/5/2024 10:41:24 AM ******/
+/****** Object:  StoredProcedure [info].[fact_controltower_fact_history]    Script Date: 2/5/2024 10:41:24 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE     PROCEDURE [info].[usp_capture_fact_controltower_ap3_history]   
+CREATE   PROCEDURE [info].[fact_controltower_fact_history]  @p_capture_date Date = NULL
 AS
 
--- exec  info.usp_capture_fact_controltower_ap3_history     
--- select distinct [Data asof date] from [info].[fact_controltower_ap3_history]
--- select top 100 * from  [info].[fact_controltower_ap3_history] where [data asof Date] ='2023-12-21'
+--exec info.fact_controltower_fact_history @p_capture_date = getdate()
 
 DECLARE @data_asof_date DATE
 
-SET @data_asof_date =  DATEADD( d, -1,   CAST(getdate() AS DATE)) 
-
-DELETE [info].[fact_controltower_ap3_history] WHERE [Data asof Date] = @data_asof_date
-DELETE [info].[fact_controltower_ap3_history] where [Data asof Date] < DATEADD(d,-14,@data_asof_date)
-
+SET @data_asof_date =  DATEADD( d, -1, ISNULL(@p_capture_date,CAST(getdate() AS DATE))) 
  
 INSERT INTO [info].[fact_controltower_ap3_history]
            ([Data asof Date]
@@ -147,7 +141,6 @@ SELECT @data_asof_date
       ,[Invoice Generated Date]
   FROM [info].[fact_controltower_ap3]
 
- 
 RETURN
 
 
