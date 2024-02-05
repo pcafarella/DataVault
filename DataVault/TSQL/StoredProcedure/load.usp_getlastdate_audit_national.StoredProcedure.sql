@@ -1,4 +1,7 @@
-/****** Object:  StoredProcedure [load].[usp_getlastdate_audit_national]    Script Date: 12/15/2023 2:05:50 PM ******/
+/****** Object:  StoredProcedure [load].[usp_getlastdate_audit_national]    Script Date: 2/5/2024 10:41:23 AM ******/
+DROP PROCEDURE [load].[usp_getlastdate_audit_national]
+GO
+/****** Object:  StoredProcedure [load].[usp_getlastdate_audit_national]    Script Date: 2/5/2024 10:41:24 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

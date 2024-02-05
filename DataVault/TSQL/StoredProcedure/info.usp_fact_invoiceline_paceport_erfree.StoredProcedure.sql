@@ -1,4 +1,7 @@
-/****** Object:  StoredProcedure [info].[usp_fact_invoiceline_paceport_erfree]    Script Date: 12/15/2023 2:05:50 PM ******/
+/****** Object:  StoredProcedure [info].[usp_fact_invoiceline_paceport_erfree]    Script Date: 2/5/2024 10:41:23 AM ******/
+DROP PROCEDURE [info].[usp_fact_invoiceline_paceport_erfree]
+GO
+/****** Object:  StoredProcedure [info].[usp_fact_invoiceline_paceport_erfree]    Script Date: 2/5/2024 10:41:24 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
