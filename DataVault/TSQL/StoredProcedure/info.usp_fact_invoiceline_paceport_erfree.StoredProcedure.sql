@@ -1,8 +1,12 @@
-
-/****** Object:  StoredProcedure [info].[usp_fact_invoiceline_paceport_erfree]    Script Date: 1/30/2024 2:45:18 PM ******/
+/****** Object:  StoredProcedure [info].[usp_fact_invoiceline_paceport_erfree]    Script Date: 2/5/2024 11:13:14 AM ******/
 DROP PROCEDURE [info].[usp_fact_invoiceline_paceport_erfree]
 GO
-
+/****** Object:  StoredProcedure [info].[usp_fact_invoiceline_paceport_erfree]    Script Date: 2/5/2024 11:13:14 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ 
 CREATE     PROCEDURE [info].[usp_fact_invoiceline_paceport_erfree] AS 
  
 -- exec info.usp_fact_invoiceline_paceport_erfree
@@ -66,8 +70,8 @@ LEFT OUTER JOIN market ON market.ctab_id = b.tenant_id AND sww.reqnbr = market.a
 LEFT OUTER JOIN industry ON industry.ctab_id =b.tenant_id AND sww.reqnbr = industry.aux_data_id 
 LEFT OUTER JOIN mas.customer_interregional  cir ON LTRIM(RTRIM(cir.ir_customer_no)) = LTRIM(RTRIM(b.pace_account_no))
 WHERE sil.charge <> 0
-  AND si.actual_date >= '2021-01-01'
-  AND b.pace_account_no NOT IN ('10-118160','10-118134','30-369063','10-118141','60-533423','20-386154','20-387904','20-388607','24-233647','24-289779','24-307942','24-312733','26-101922','30-366665','35-002011','40-403222','51-100387','60-520070','60-532499','60-533132','77-101091','92-617836','92-620669')
+  AND si.actual_date >= '2020-01-01'
+  AND b.pace_account_no NOT IN ('10-118160','10-118134','30-369063','10-118141','60-533423')
 
 RETURN
 

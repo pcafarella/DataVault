@@ -1,7 +1,7 @@
-/****** Object:  StoredProcedure [psa].[load_national_to_persist]    Script Date: 2/5/2024 10:41:23 AM ******/
+/****** Object:  StoredProcedure [psa].[load_national_to_persist]    Script Date: 2/5/2024 11:13:14 AM ******/
 DROP PROCEDURE [psa].[load_national_to_persist]
 GO
-/****** Object:  StoredProcedure [psa].[load_national_to_persist]    Script Date: 2/5/2024 10:41:24 AM ******/
+/****** Object:  StoredProcedure [psa].[load_national_to_persist]    Script Date: 2/5/2024 11:13:14 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

@@ -1,13 +1,16 @@
- IF Object_ID('info.usp_fact_controltower_national') IS NOT NULL
-	DROP PROCEDURE info.usp_fact_controltower_national
-
+/****** Object:  StoredProcedure [info].[usp_fact_controltower_national]    Script Date: 2/5/2024 11:13:14 AM ******/
+DROP PROCEDURE [info].[usp_fact_controltower_national]
+GO
+/****** Object:  StoredProcedure [info].[usp_fact_controltower_national]    Script Date: 2/5/2024 11:13:14 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE PROCEDURE [info].[usp_fact_controltower_national] @work_order_no varchar(50) = NULL
 AS 
  
--- exec info.usp_fact_controltower_national 'L1699291' -- 'L1663905'-- 'L1691793'--'L1695717' --'L1665725'
-
+-- exec info.usp_fact_controltower_national 'L1663905'-- 'L1691793'--'L1695717' --'L1665725'
 -- select top 1000 * from info.fact_controltower_national   order by  [Sample_no], test_no, Analysis_process_code,  department_level, CAST([Department_no] as int) 
 -- select top 1000 * from info.fact_controltower_national  where [Sample_no] LIKE 'L1614785-01' and product_code_base = 'V8260TCLP'  order by  [Sample_no], test_no, Analysis_process_code,  department_level, CAST([Department_no] as int) 
 
@@ -110,19 +113,18 @@ INNER JOIN bus.s_department_test_schedule_hroc_national_current s1 on s1.hk_l_de
 WHERE #test.hk_h_analysis_process IS NOT NULL  --3788788 02:28
 CREATE UNIQUE INDEX #test_department_IDX1 on #test_department(hk_h_test, hk_h_department, department_no)    WITH (IGNORE_DUP_KEY=ON  )
 
-INSERT #test_department 
+INSERT #test_department  
 SELECT #test.test_no, #test.test_no_bkcc, #test.hk_h_test, #test.sample_no, #test.hk_h_sample,  #test.receivedate, #test.holddate, #test.duedate, #test.duedate2,
 		#test.product_code, #test.hk_h_product, #test.matnum, #test.method, #test.product_code_base, #test.matnum_base, 
 		#test.analysis_process_code, #test.analysis_process_code_bkcc, #test.hk_h_analysis_process ,
         h_department.hk_h_department, h_department.department_no, dt.department_level, dt.department_type
-FROM #test
-INNER JOIN raw.l_department_test_schedule l on l.hk_h_test = #test.hk_h_test 
-INNER JOIN raw.h_department on h_department.hk_h_department = l.hk_h_department 
+FROM #test  
+INNER JOIN #temppreprep preprep ON preprep.product_code = #test.product_code_base and preprep.product_code_bkcc =#test.matnum_base
+INNER JOIN raw.h_department on department_no = 1
+INNER JOIN raw.l_department_test_schedule l on l.hk_h_test = #test.hk_h_test and l.hk_h_department = h_department.hk_h_department
 INNER JOIN mas.department_type dt on dt.department_no =  h_department.department_no 
 INNER JOIN bus.s_department_test_schedule_hroc_national_current s1 on s1.hk_l_department_test_schedule = l.hk_l_department_test_schedule
-WHERE #test.hk_h_analysis_process IS NOT NULL  --3788788 02:28
-CREATE UNIQUE INDEX #test_department_IDX1 on #test_department(hk_h_test, hk_h_department, department_no)    WITH (IGNORE_DUP_KEY=ON  )
-
+WHERE #test.hk_h_analysis_process IS NOT NULL   --  0  00:17
 -- Create table
 SELECT * 
 INTO #test_department_batch

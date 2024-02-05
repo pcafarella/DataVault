@@ -1,12 +1,17 @@
-
-IF Object_id('info.usp_fact_controltower_national_ap2') IS NOT NULL
-	DROP PROCEDURE  info.usp_fact_controltower_national_ap2
+/****** Object:  StoredProcedure [info].[usp_fact_controltower_national_ap2]    Script Date: 2/5/2024 11:13:14 AM ******/
+DROP PROCEDURE [info].[usp_fact_controltower_national_ap2]
+GO
+/****** Object:  StoredProcedure [info].[usp_fact_controltower_national_ap2]    Script Date: 2/5/2024 11:13:14 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 
  CREATE PROCEDURE [info].[usp_fact_controltower_national_ap2]    @work_order_no varchar(50) = NULL -- 'L1577869'-- 'L1632346'--'L1645127'--L1643669'--'L1642261'-- 'L1639141'--'L1641864' -- ='L1642911'-- 'L1642261'---l1641985'  --='L1641864'--'L1638501'--'L1641864'--'L1641017'--'L1636842'  --= 'L1642891'  --'L1629949'-- 'L1622150'--'L1637130' --'L1621899'
 AS 
 
--- exec info.usp_fact_controltower_national_ap2 'L1686834' --'L1686829' --'L1688539'--'L1699159'--'L1698718'--'L1699291' --'L1663905'-- 'L1695196'  -- 'L1695618'  'L1672958'    'L1693822' 
--- select top 1000 * from info.fact_controltower_national_ap2   WHERE sample_no LIKE '%01%' and  (analysis_process_code like 'TPHOGHEX') order by   sample_no, analysis_process_code, analysis_process_code_bkcc
+-- exec info.usp_fact_controltower_national_ap2 'L1686829' --'L1688539'--'L1699159'--'L1698718'--'L1699291' --'L1663905'-- 'L1695196'  -- 'L1695618'  'L1672958'    'L1693822' 
+-- select top 1000 * from info.fact_controltower_national_ap2   WHERE sample_no LIKE '%09%' and  (analysis_process_code like 'TPHOGHEX') order by   sample_no, analysis_process_code, analysis_process_code_bkcc
 
 if object_id('info.fact_controltower_national_ap2') IS NOT NULL  DROP TABLE info.fact_controltower_national_ap2
 
