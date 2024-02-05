@@ -1,17 +1,17 @@
-/****** Object:  StoredProcedure [info].[usp_fact_invoiceline_paceport_erfree]    Script Date: 1/30/2024 2:45:18 PM ******/
-DROP PROCEDURE [info].[usp_fact_invoiceline_paceport_erfree]
+/****** Object:  StoredProcedure [info].[usp_fact_invoiceline_paceport_er]    Script Date: 1/30/2024 2:45:18 PM ******/
+DROP PROCEDURE [info].[usp_fact_invoiceline_paceport_er]
 GO
-/****** Object:  StoredProcedure [info].[usp_fact_invoiceline_paceport_erfree]    Script Date: 1/30/2024 2:45:18 PM ******/
+/****** Object:  StoredProcedure [info].[usp_fact_invoiceline_paceport_er]    Script Date: 1/30/2024 2:45:18 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
  
-CREATE     PROCEDURE [info].[usp_fact_invoiceline_paceport_erfree] AS 
+CREATE     PROCEDURE [info].[usp_fact_invoiceline_paceport_er] AS 
  
--- exec info.usp_fact_invoiceline_paceport_erfree
+-- exec info.usp_fact_invoiceline_paceport_er
 
-IF Object_id('info.fact_invoiceline_paceport_erfree') IS NOT NULL drop table info.fact_invoiceline_paceport_erfree
+IF Object_id('info.fact_invoiceline_paceport_er') IS NOT NULL drop table info.fact_invoiceline_paceport_er
 
 ;WITH market as (
 SELECT  ctab_id, aux_data_id , MAX(aux_data +'-'+cl1.choice_desc)  Market
@@ -60,7 +60,7 @@ SELECT  CASE WHEN sil.charge >= 0 THEN 'Invoice' ELSE 'Credit' END [Accounting T
 		CAST(COALESCE(ISNULL(NULLIF(sil.qty,0.00),1.00),0.00) AS float) Volume, 
 		COALESCE(b.work_order_no,'') [Word Order Desc],
 		0 total_amt
-INTO info.fact_invoiceline_paceport_erfree
+INTO info.fact_invoiceline_paceport_er
 FROM bus.bridge_test_invoiceline_paceport b 
 LEFT OUTER JOIN bus.s_invoice_mroc_paceport_current  si ON si.hk_h_invoice = b.hk_h_invoice -- 1043445
 LEFT OUTER JOIN bus.s_invoiceline_mroc_current sil ON sil.hk_h_invoiceline = b.hk_h_invoiceline -- 1043445
@@ -71,7 +71,7 @@ LEFT OUTER JOIN industry ON industry.ctab_id =b.tenant_id AND sww.reqnbr = indus
 LEFT OUTER JOIN mas.customer_interregional  cir ON LTRIM(RTRIM(cir.ir_customer_no)) = LTRIM(RTRIM(b.pace_account_no))
 WHERE sil.charge <> 0
   AND si.actual_date >= '2021-01-01'
-  AND b.pace_account_no NOT IN ('10-118160','10-118134','30-369063','10-118141','60-533423','20-386154','20-387904','20-388607','24-233647','24-289779','24-307942','24-312733','26-101922','30-366665','35-002011','40-403222','51-100387','60-520070','60-532499','60-533132','77-101091','92-617836','92-620669')
+  AND b.pace_account_no  IN ('10-118160','10-118134','30-369063','10-118141','60-533423','20-386154','20-387904','20-388607','24-233647','24-289779','24-307942','24-312733','26-101922','30-366665','35-002011','40-403222','51-100387','60-520070','60-532499','60-533132','77-101091','92-617836','92-620669')
 
 RETURN
 

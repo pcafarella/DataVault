@@ -144,9 +144,6 @@ SELECT @data_asof_date
       ,[Invoice Generated Date]
   FROM [info].[fact_controltower_ap3]
 
-DELETE  [info].[fact_controltower_ap3_history] where [Data asof Date] < DATEADD(d,-14,@data_asof_date)
---DELETE [info].[fact_controltower_ap3_history] WHERE 
-
  
 RETURN
 

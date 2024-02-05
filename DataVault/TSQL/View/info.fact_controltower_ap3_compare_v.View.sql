@@ -1,14 +1,11 @@
-/****** Object:  View [info].[fact_controltower_ap3_compare_v]    Script Date: 12/21/2023 7:38:03 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 
- 
+ If object_id('info.fact_controltower_ap3_compare_v') iS NOT NULL
+	DROP VIEW [info].[fact_controltower_ap3_compare_v] 
+ GO
 
-CREATE                                                         VIEW [info].[fact_controltower_ap3_compare_v] AS   
+CREATE VIEW [info].[fact_controltower_ap3_compare_v] AS   
 
---select top 100 * from [info].[fact_controltower_ap3_compare_v]
+--select top 100 * from [info].[fact_controltower_ap3_compare_v] where  [Sample Nbr] =   'L1694291-04'  
 
 SELECT work_order_no [Work Order Nbr]
       ,sample_no [Sample Nbr]
@@ -66,7 +63,7 @@ SELECT work_order_no [Work Order Nbr]
 	  ,analysis_dept_done_status_date [Second Review Complete]
 	  ,'' [Analysis Instrument]
 	  ,'' [Location]
-	  ,''  [Analysis Dept Attempt Count]
+	  ,CASE WHEN batch_no_cnt = 0 THEN 1 ELSE batch_no_cnt END [Analysis Dept Attempt Count]
 
 	  ,reporting_department_no [Reporting Dept Nbr]
 	  ,reporting_department_short_name [Reporting Dept Abbrev]
@@ -79,12 +76,17 @@ SELECT work_order_no [Work Order Nbr]
 	  ,invoice_process_status_code [Invoice Dept Lims Status]
 	  ,invoice_process_status_date [Invoice Dept Lims Status Date]
 	  ,invoice_dept_done_status_date [Invoice Generated Date]
- 
-	FROM info.fact_controltower_national_ap2 o
-	INNER JOIN mas.lab_reporting_group g on g.list_type = o.analysis_process_code and g.list_matclass = o.analysis_process_code_bkcc
-	WHERE LEFT(analysis_process_code,3) != 'ALL'
-	  AND [login_dept_avail_date] >= '2023-09-17'
-	  AND (CAST(analysis_dept_done_status_date AS DATE) IS NULL OR CAST(analysis_dept_done_status_date AS DATE) =  DATEADD(dd,-1,CAST(getdate() AS DATE)))
-	  AND analysis_department_no IS NOT NULL
+FROM info.fact_controltower_national_ap2 o
+LEFT JOIN mas.lab_reporting_group g on g.list_type = o.analysis_process_code and g.list_matclass = o.analysis_process_code_bkcc
+WHERE LEFT(analysis_process_code,3) != 'ALL'
+  	--AND ISNULL(method,'') NOT IN ( 'calc', 'calc.')
+	AND [login_dept_avail_date] >= DATEADD(month, -4, getdate())
+	AND (CAST(analysis_dept_done_status_date AS DATE) IS NULL OR CAST(analysis_dept_done_status_date AS DATE) =  DATEADD(dd,-1,CAST(getdate() AS DATE)))
+	AND  (NOT (prep_department_no = 2 and Analysis_process_code LIKE '%TCLP%' AND CAST(prep_dept_done_status_date AS DATE) IS NOT NULL) OR  CAST(prep_dept_done_status_date AS DATE) =  DATEADD(dd,-1,CAST(getdate() AS DATE)))
+	AND (NOT (prep_department_no = 23 and Analysis_process_code LIKE '%SPLP%' AND CAST(prep_dept_done_status_date AS DATE) IS NOT NULL) OR CAST(prep_dept_done_status_date AS DATE) =  DATEADD(dd,-1,CAST(getdate() AS DATE)))
+	AND (NOT (prep_department_no = 23 and Analysis_process_code LIKE '%STLC%' AND CAST(prep_dept_done_status_date AS DATE) IS NOT NULL)  OR CAST(prep_dept_done_status_date AS DATE) =  DATEADD(dd,-1,CAST(getdate() AS DATE)))
+	AND (NOT (prep_department_no = 3 and Analysis_process_code ='EXTRACT-HOLD' AND CAST(prep_dept_done_status_date AS DATE) IS NOT NULL) OR CAST(prep_dept_done_status_date AS DATE) =  DATEADD(dd,-1,CAST(getdate() AS DATE)))
+	AND NOT EXISTS (SELECT 1 FROM info.fact_controltower_national i WHERE i.sample_no = o.sample_no and i.analysis_process_code = o.analysis_process_code and i.analysis_process_code_bkcc = o.analysis_process_code_bkcc and i.department_no = 10)
+
 
 GO
