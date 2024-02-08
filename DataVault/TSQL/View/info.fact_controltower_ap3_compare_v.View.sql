@@ -1,7 +1,22 @@
- 
-CREATE OR ALTER VIEW [info].[fact_controltower_ap3_compare_v] AS   
+/****** Object:  View [info].[fact_controltower_ap3_compare_v]    Script Date: 2/8/2024 5:20:00 PM ******/
+DROP VIEW [info].[fact_controltower_ap3_compare_v]
+GO
+/****** Object:  View [info].[fact_controltower_ap3_compare_v]    Script Date: 2/8/2024 5:20:00 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 
---select top 100 * from [info].[fact_controltower_ap3_compare_v] where  [Sample Nbr] =   'L1694291-04'  
+
+
+
+
+
+
+ 
+CREATE               VIEW [info].[fact_controltower_ap3_compare_v] AS   
+
+--select top 100 * from [info].[fact_controltower_ap3_compare_v] where  [Sample Nbr] =   'L1700676-01'  
 
 SELECT work_order_no [Work Order Nbr]
       ,sample_no [Sample Nbr]
@@ -75,16 +90,14 @@ SELECT work_order_no [Work Order Nbr]
  
 FROM info.fact_controltower_national_ap2 o
 LEFT JOIN mas.lab_reporting_group g on g.list_type = o.analysis_process_code and g.list_matclass = o.analysis_process_code_bkcc
-WHERE NOT LEFT(analysis_process_code,3) IN ('ALL','COR','FTW')
-     AND NOT (LEFT(analysis_process_code,3) is null or (LEFT(analysis_process_code,3) = 'DEC' and analysis_department_no in (2,5)) OR analysis_process_code  like 'VICP%')  
-	AND [login_dept_avail_date] >= DATEADD(month, -4, getdate())
-	AND (CAST(analysis_dept_done_status_date AS DATE) IS NULL OR CAST(analysis_dept_done_status_date AS DATE) =  DATEADD(dd,-1,CAST(getdate() AS DATE)))
-	AND NOT (prep_department_no = 2  AND Analysis_process_code LIKE '%TCLP%' AND (CAST(prep_dept_done_status_date AS DATE) IS NOT NULL OR CAST(prep_dept_done_status_date AS DATE) =  DATEADD(dd,-1,CAST(getdate() AS DATE))))
-    AND NOT (prep_department_no = 23 AND Analysis_process_code LIKE '%SPLP%' AND (CAST(prep_dept_done_status_date AS DATE) IS NOT NULL OR CAST(prep_dept_done_status_date AS DATE) =  DATEADD(dd,-1,CAST(getdate() AS DATE))))
-    AND NOT (prep_department_no = 3  AND Analysis_process_code ='EXTRACT-HOLD' AND (CAST(prep_dept_done_status_date AS DATE) IS NOT NULL OR CAST(prep_dept_done_status_date AS DATE) =  DATEADD(dd,-1,CAST(getdate() AS DATE))))
-    AND NOT EXISTS (SELECT 1 FROM info.fact_controltower_national i WHERE i.sample_no = o.sample_no and i.analysis_process_code = o.analysis_process_code and i.analysis_process_code_bkcc = o.analysis_process_code_bkcc and i.department_no = 10)
+WHERE NOT LEFT(analysis_process_code,3)  in ('ALL','COR','FTW','DEC','VIC','VEG')
+    AND login_dept_avail_date >= DATEADD(month, -4, getdate())
+	AND (analysis_dept_done_status_date IS NULL OR CAST(ISNULL(analysis_dept_done_status_date,'1900-01-01') AS DATE) =  DATEADD(dd,-1,CAST(getdate() AS DATE)))
+    AND NOT (prep_department_no = 23 AND Analysis_process_code_bkcc ='LEACHATE' AND prep_dept_done_status_date IS NOT NULL AND CAST(ISNULL(prep_dept_done_status_date,'1900-01-01') AS DATE) !=  DATEADD(dd,-1,CAST(getdate() AS DATE)))
+    AND NOT (prep_department_no = 23 AND analysis_process_code LIKE '%STLC%' AND prep_dept_done_status_date IS NOT NULL AND CAST(ISNULL(prep_dept_done_status_date,'1900-01-01') AS DATE) !=  DATEADD(dd,-1,CAST(getdate() AS DATE)))
+    AND NOT (prep_department_no = 23 AND analysis_process_code LIKE '%SPLP%' AND prep_dept_done_status_date IS NOT NULL AND CAST(ISNULL(prep_dept_done_status_date,'1900-01-01') AS DATE) !=  DATEADD(dd,-1,CAST(getdate() AS DATE))) 
+	AND NOT (prep_department_no = 3  AND Analysis_process_code ='EXTRACT-HOLD' AND prep_dept_done_status_date IS NOT NULL AND CAST(ISNULL(prep_dept_done_status_date,'1900-01-01') AS DATE) !=  DATEADD(dd,-1,CAST(getdate() AS DATE)))
+    AND NOT EXISTS (SELECT 1 FROM info.fact_controltower_national i WHERE i.sample_no = o.sample_no and i.analysis_process_code = o.analysis_process_code and i.analysis_process_code_bkcc = o.analysis_process_code_bkcc and i.department_no = 10) 
  
 
 GO
-
-

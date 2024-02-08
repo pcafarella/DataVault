@@ -1,4 +1,7 @@
-/****** Object:  View [info].[Dim_Reporting_Group]    Script Date: 12/15/2023 2:09:16 PM ******/
+/****** Object:  View [info].[Dim_Reporting_Group]    Script Date: 2/8/2024 5:20:00 PM ******/
+DROP VIEW [info].[Dim_Reporting_Group]
+GO
+/****** Object:  View [info].[Dim_Reporting_Group]    Script Date: 2/8/2024 5:20:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

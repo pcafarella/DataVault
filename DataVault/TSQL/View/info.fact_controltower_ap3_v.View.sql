@@ -1,4 +1,7 @@
-/****** Object:  View [info].[fact_controltower_ap3_v]    Script Date: 12/21/2023 7:38:03 PM ******/
+/****** Object:  View [info].[fact_controltower_ap3_v]    Script Date: 2/8/2024 5:20:00 PM ******/
+DROP VIEW [info].[fact_controltower_ap3_v]
+GO
+/****** Object:  View [info].[fact_controltower_ap3_v]    Script Date: 2/8/2024 5:20:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -20,7 +23,7 @@ FROM info.fact_controltower_adp_v
  
  
 
-CREATE       OR ALTER                                 VIEW [info].[fact_controltower_ap3_v] AS   
+CREATE                                         VIEW [info].[fact_controltower_ap3_v] AS   
 
 --select top 100 * from [info].[fact_controltower_ap3_v]
 

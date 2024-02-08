@@ -1,4 +1,19 @@
-/****** Object:  View [bus].[s_sample_mroc_national_current]    Script Date: 12/21/2023 12:52:58 PM ******/
+EXEC sys.sp_dropextendedproperty @name=N'Comment' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_current', @level2type=N'COLUMN',@level2name=N'dss_create_time'
+GO
+EXEC sys.sp_dropextendedproperty @name=N'Comment' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_current', @level2type=N'COLUMN',@level2name=N'dss_version'
+GO
+EXEC sys.sp_dropextendedproperty @name=N'Comment' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_current', @level2type=N'COLUMN',@level2name=N'dss_start_date'
+GO
+EXEC sys.sp_dropextendedproperty @name=N'Comment' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_current', @level2type=N'COLUMN',@level2name=N'dss_load_date'
+GO
+EXEC sys.sp_dropextendedproperty @name=N'Comment' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_current', @level2type=N'COLUMN',@level2name=N'dss_record_source'
+GO
+EXEC sys.sp_dropextendedproperty @name=N'Comment' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_current', @level2type=N'COLUMN',@level2name=N'dss_change_hash'
+GO
+/****** Object:  View [bus].[s_sample_mroc_national_current]    Script Date: 2/8/2024 5:20:00 PM ******/
+DROP VIEW [bus].[s_sample_mroc_national_current]
+GO
+/****** Object:  View [bus].[s_sample_mroc_national_current]    Script Date: 2/8/2024 5:20:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
