@@ -1,7 +1,7 @@
-/****** Object:  StoredProcedure [info].[usp_capture_fact_controltower_ap3_history]    Script Date: 2/5/2024 11:13:14 AM ******/
+/****** Object:  StoredProcedure [info].[usp_capture_fact_controltower_ap3_history]    Script Date: 2/8/2024 9:19:56 AM ******/
 DROP PROCEDURE [info].[usp_capture_fact_controltower_ap3_history]
 GO
-/****** Object:  StoredProcedure [info].[usp_capture_fact_controltower_ap3_history]    Script Date: 2/5/2024 11:13:14 AM ******/
+/****** Object:  StoredProcedure [info].[usp_capture_fact_controltower_ap3_history]    Script Date: 2/8/2024 9:19:56 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

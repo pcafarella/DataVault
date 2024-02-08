@@ -1,4 +1,7 @@
-/****** Object:  StoredProcedure [dbo].[usp_ws_run_ssis_catalog_package]    Script Date: 12/22/2023 10:19:36 AM ******/
+/****** Object:  StoredProcedure [dbo].[usp_ws_run_ssis_catalog_package]    Script Date: 2/8/2024 9:19:56 AM ******/
+DROP PROCEDURE [dbo].[usp_ws_run_ssis_catalog_package]
+GO
+/****** Object:  StoredProcedure [dbo].[usp_ws_run_ssis_catalog_package]    Script Date: 2/8/2024 9:19:56 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
