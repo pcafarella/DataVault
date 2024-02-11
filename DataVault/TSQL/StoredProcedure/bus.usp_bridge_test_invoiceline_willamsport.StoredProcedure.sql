@@ -1,7 +1,7 @@
-/****** Object:  StoredProcedure [bus].[usp_bridge_test_invoiceline_willamsport]    Script Date: 2/5/2024 11:07:57 AM ******/
+/****** Object:  StoredProcedure [bus].[usp_bridge_test_invoiceline_willamsport]    Script Date: 2/11/2024 5:13:54 PM ******/
 DROP PROCEDURE [bus].[usp_bridge_test_invoiceline_willamsport]
 GO
-/****** Object:  StoredProcedure [bus].[usp_bridge_test_invoiceline_willamsport]    Script Date: 2/5/2024 11:07:57 AM ******/
+/****** Object:  StoredProcedure [bus].[usp_bridge_test_invoiceline_willamsport]    Script Date: 2/11/2024 5:13:54 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

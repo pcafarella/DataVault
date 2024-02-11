@@ -1,7 +1,7 @@
-/****** Object:  StoredProcedure [info].[usp_fact_invoiceline_fairfield]    Script Date: 2/5/2024 11:07:57 AM ******/
+/****** Object:  StoredProcedure [info].[usp_fact_invoiceline_fairfield]    Script Date: 2/11/2024 5:13:54 PM ******/
 DROP PROCEDURE [info].[usp_fact_invoiceline_fairfield]
 GO
-/****** Object:  StoredProcedure [info].[usp_fact_invoiceline_fairfield]    Script Date: 2/5/2024 11:07:57 AM ******/
+/****** Object:  StoredProcedure [info].[usp_fact_invoiceline_fairfield]    Script Date: 2/11/2024 5:13:54 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -25,7 +25,7 @@ SELECT CASE WHEN (stw.price * coalesce(stw.surcharge,0)/ 100) + stw.price < 0 TH
 		 CAST(ROUND(((stw.price * coalesce(stw.surcharge,0)/ 100) + stw.price),2) AS Decimal(12,2)) [Extended Cost],
 	     CAST(ROUND(((stw.price * coalesce(stw.surcharge,0)/ 100) + stw.price),2) AS Decimal(12,2)) [Revenue Adjusted],
          CAST(ROUND((stw.Price * coalesce(stw.surcharge,0) / 100 + stw.Price)  - stw.Price,2) AS Decimal(12,2)) [Factor Amount],
-		 '-1' Industry,
+		 COALESCE(NULLIF(sprw.location,''), '-1') Industry,
 		 CAST(siw.invoiceDate AS DATE) [Invoice Date],
 		 h_invoice.Invoice_no [Invoice Nbr], 
 		 CASE WHEN cir.ir_customer_no IS NOT NULL THEN 'Working' ELSE 'Standard' END [Invoice Type],
@@ -34,7 +34,7 @@ SELECT CASE WHEN (stw.price * coalesce(stw.surcharge,0)/ 100) + stw.price < 0 TH
 		 CAST(0 AS Bit) [Is Pan File],
 		 CAST(0 AS Bit) [Is SISOSUB],
 		 COALESCE(LEFT(LTRIM(NULLIF(h_pace_account.pace_account_no,'')) ,2),'-1') Lab,
-		 COALESCE(NULLIF(sprw.Location, ''),'-1') Location,
+		'-1' [location],
 		 COALESCE(ssw.samplereceived,'1900-01-01') [Login Date],
 		 COALESCE(NULLIF(sprw.projecttype,''), '-1') Market,
 	     '-1' [Nbr Days],
@@ -86,7 +86,7 @@ SELECT  CASE WHEN saiw.price < 0 OR saiw.quantity < 0 OR saiw.itemtotal < 0 THEN
 		 CASE WHEN quantity < 0 THEN ABS(CAST(ROUND(saiw.itemtotal,2) AS Decimal(12,2)) ) * -1
 		                        ELSE CAST(ROUND(saiw.itemtotal,2) AS Decimal(12,2)) END [Revenue Adjusted],
          CAST(0 AS Decimal(12,2)) [Factor Amount],
-		 '-1' Industry,
+		 COALESCE(NULLIF(sprw.location,''), '-1') Industry,
 		 CAST(siw.invoiceDate AS DATE) [Invoice Date],
 		 h_invoice.Invoice_no [Invoice Nbr], 
 		 CASE WHEN cir.ir_customer_no IS NOT NULL THEN 'Working' ELSE 'Standard' END [Invoice Type],
@@ -136,7 +136,7 @@ SELECT   'Credit' [Accounting Type],
 		 CAST(ROUND(((saiw.price * coalesce(saiw.surcharge,0)/ 100) + saiw.price),2) AS Decimal(12,2))*-1 [Extended Cost],
 	     CAST(ROUND(((saiw.price * coalesce(saiw.surcharge,0)/ 100) + saiw.price),2) AS Decimal(12,2))*-1  [Revenue Adjusted],
          CAST(ROUND((saiw.Price * coalesce(saiw.surcharge,0) / 100 + saiw.Price)  - saiw.Price,2) AS Decimal(12,2))*-1  [Factor Amount],
-		 '-1' Industry,
+		 COALESCE(NULLIF(sprw.location,''), '-1') Industry,
 		 CAST(siw.invoiceDate AS DATE) [Invoice Date],
 		 h_invoice.Invoice_no [Invoice Nbr], 
 		 CASE WHEN cir.ir_customer_no IS NOT NULL THEN 'Working' ELSE 'Standard' END [Invoice Type],
@@ -192,7 +192,7 @@ SELECT   'Invoice' [Accounting Type],
 		 CAST(ROUND(((saiw.price * coalesce(saiw.surcharge,0)/ 100) + saiw.price),2) AS Decimal(12,2)) [Extended Cost],
 	     CAST(ROUND(((saiw.price * coalesce(saiw.surcharge,0)/ 100) + saiw.price),2) AS Decimal(12,2)) [Revenue Adjusted],
          CAST(ROUND((saiw.Price * coalesce(saiw.surcharge,0) / 100 + saiw.Price)  - saiw.Price,2) AS Decimal(12,2)) [Factor Amount],
-		 '-1' Industry,
+		 COALESCE(NULLIF(sprw.location,''), '-1') Industry,
 		 CAST(siw.invoiceDate AS DATE) [Invoice Date],
 		 h_invoice.Invoice_no [Invoice Nbr], 
 		 CASE WHEN cir.ir_customer_no IS NOT NULL THEN 'Working' ELSE 'Standard' END [Invoice Type],
