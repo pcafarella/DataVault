@@ -10,10 +10,10 @@ EXEC sys.sp_dropextendedproperty @name=N'Comment' , @level0type=N'SCHEMA',@level
 GO
 EXEC sys.sp_dropextendedproperty @name=N'Comment' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_test_hroc_national_current', @level2type=N'COLUMN',@level2name=N'dss_change_hash'
 GO
-/****** Object:  View [bus].[s_test_hroc_national_current]    Script Date: 2/8/2024 5:20:00 PM ******/
+/****** Object:  View [bus].[s_test_hroc_national_current]    Script Date: 2/10/2024 10:31:02 PM ******/
 DROP VIEW [bus].[s_test_hroc_national_current]
 GO
-/****** Object:  View [bus].[s_test_hroc_national_current]    Script Date: 2/8/2024 5:20:00 PM ******/
+/****** Object:  View [bus].[s_test_hroc_national_current]    Script Date: 2/10/2024 10:31:02 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

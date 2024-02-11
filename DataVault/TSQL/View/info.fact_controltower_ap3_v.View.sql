@@ -1,11 +1,13 @@
-/****** Object:  View [info].[fact_controltower_ap3_v]    Script Date: 2/8/2024 5:20:00 PM ******/
+/****** Object:  View [info].[fact_controltower_ap3_v]    Script Date: 2/10/2024 10:31:02 PM ******/
 DROP VIEW [info].[fact_controltower_ap3_v]
 GO
-/****** Object:  View [info].[fact_controltower_ap3_v]    Script Date: 2/8/2024 5:20:00 PM ******/
+/****** Object:  View [info].[fact_controltower_ap3_v]    Script Date: 2/10/2024 10:31:02 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+
+
 
 
 
@@ -23,7 +25,7 @@ FROM info.fact_controltower_adp_v
  
  
 
-CREATE                                         VIEW [info].[fact_controltower_ap3_v] AS   
+CREATE                                           VIEW [info].[fact_controltower_ap3_v] AS   
 
 --select top 100 * from [info].[fact_controltower_ap3_v]
 
@@ -64,6 +66,7 @@ SELECT work_order_no [Work Order Nbr]
 	  ,preprep_dept_avail_status_date [PrePrep Available] 
 	  ,preprep_dept_batch_status_date [PrePrep Batched] 
 	  ,preprep_dept_done_status_date [PrePrep Complete] 
+	  ,preprep_dept_attempt_count  [PrePrep Attempt Count] 
 	 	
   	  ,prep_department_no [Prep Dept Nbr]
 	  ,prep_department_short_name [Prep Dept Abbrev] 
@@ -74,7 +77,7 @@ SELECT work_order_no [Work Order Nbr]
 	  ,prep_dept_batch_status_date [Prep Batched] 
 	  ,prep_dept_inprogress_status_date [Prep Benchwork Started] 
 	  ,prep_dept_done_status_date [Prep Complete] 
-	  --,prep_attempt_count [Prep Dept Attempt Count] 
+	  ,prep_dept_attempt_count  [Prep Attempt Count] 
 
 	  ,analysis_department_no [Analysis Dept Nbr] 
 	  ,analysis_department_short_name [Analysis Dept Abbrev]
@@ -88,7 +91,7 @@ SELECT work_order_no [Work Order Nbr]
 	  ,analysis_dept_done_status_date [Second Review Complete]
 	  ,CAST(NULL AS VARCHAR)  [Analysis Instrument]
 	  ,CAST(NULL AS VARCHAR) [Location]
-	  ,CAST(batch_no_cnt AS VARCHAR) [Analysis Dept Attempt Count]
+	  ,analysis_dept_attempt_count [Analysis Attempt Count]
 
 	  ,reporting_department_no [Reporting Dept Nbr]
 	  ,reporting_department_short_name [Reporting Dept Abbrev]
@@ -101,6 +104,8 @@ SELECT work_order_no [Work Order Nbr]
 	  ,invoice_process_status_code [Invoice Dept Lims Status]
 	  ,invoice_process_status_date [Invoice Dept Lims Status Date]
 	  ,invoice_dept_done_status_date [Invoice Generated Date]
+
+	  ,warning_no
  
   FROM info.fact_controltower_national_ap2
 

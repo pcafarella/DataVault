@@ -1,19 +1,7 @@
-EXEC sys.sp_dropextendedproperty @name=N'Comment' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_current', @level2type=N'COLUMN',@level2name=N'dss_create_time'
-GO
-EXEC sys.sp_dropextendedproperty @name=N'Comment' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_current', @level2type=N'COLUMN',@level2name=N'dss_version'
-GO
-EXEC sys.sp_dropextendedproperty @name=N'Comment' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_current', @level2type=N'COLUMN',@level2name=N'dss_start_date'
-GO
-EXEC sys.sp_dropextendedproperty @name=N'Comment' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_current', @level2type=N'COLUMN',@level2name=N'dss_load_date'
-GO
-EXEC sys.sp_dropextendedproperty @name=N'Comment' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_current', @level2type=N'COLUMN',@level2name=N'dss_record_source'
-GO
-EXEC sys.sp_dropextendedproperty @name=N'Comment' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_current', @level2type=N'COLUMN',@level2name=N'dss_change_hash'
-GO
-/****** Object:  View [bus].[s_sample_mroc_national_current]    Script Date: 2/8/2024 5:20:00 PM ******/
+/****** Object:  View [bus].[s_sample_mroc_national_current]    Script Date: 2/10/2024 10:31:02 PM ******/
 DROP VIEW [bus].[s_sample_mroc_national_current]
 GO
-/****** Object:  View [bus].[s_sample_mroc_national_current]    Script Date: 2/8/2024 5:20:00 PM ******/
+/****** Object:  View [bus].[s_sample_mroc_national_current]    Script Date: 2/10/2024 10:31:02 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -62,7 +50,19 @@ dss_start_date,
 dss_version, 
 dss_create_time)
 AS
-SELECT 
+
+
+ WITH ref_tracking AS (
+SELECT * 
+FROM (
+SELECT	 key_value, audit_table, audit_action,  
+		 audit_date, audit_action audit_action1,  audit_table  audit_table1,  audit_date  audit_date1
+FROM ref.r_record_tracking
+WHERE audit_table = 'SAMPLE' AND audit_action IN ('DELETE','INSERT') ) t
+PIVOT(MAX(audit_date)
+FOR audit_action IN ([DELETE], [INSERT]) )AS pvt)
+ 
+  SELECT 
 s_sample_mroc_national.hk_h_sample, 
 s_sample_mroc_national.clientid, 
 s_sample_mroc_national.projectnum, 
@@ -102,30 +102,24 @@ s_sample_mroc_national.dss_load_date,
 s_sample_mroc_national.dss_start_date, 
 s_sample_mroc_national.dss_version, 
 s_sample_mroc_national.dss_create_time 
-FROM WSDataVault_dev_incremental.raw.s_sample_mroc_national s_sample_mroc_national
+FROM raw.s_sample_mroc_national s_sample_mroc_national
 INNER JOIN (
     SELECT 
     hk_h_sample, 
     MAX(dss_start_date) AS dss_start_date
-    FROM WSDataVault_dev_incremental.raw.s_sample_mroc_national
+    FROM raw.s_sample_mroc_national
     GROUP BY hk_h_sample) curr
 ON curr.hk_h_sample = s_sample_mroc_national.hk_h_sample
 AND curr.dss_start_date = s_sample_mroc_national.dss_start_date
-INNER JOIN WSDataVault_dev_incremental.raw.h_sample on h_sample.hk_h_sample = s_sample_mroc_national.hk_h_sample
-WHERE (NOT EXISTS (SELECT 1 FROM  ref.r_record_tracking where key_value =  h_sample.sample_no AND audit_table = 'SAMPLE' AND audit_action = 'DELETE' ) 
-        OR EXISTS (SELECT  1 FROM ref.r_record_tracking where key_value =  h_sample.sample_no AND audit_table = 'SAMPLE' AND audit_action = 'INSERT' ))
+INNER JOIN raw.h_sample on h_sample.hk_h_sample = s_sample_mroc_national.hk_h_sample
+ WHERE ISNULL((SELECT max(audit_date1)  FROM ref_tracking i
+               WHERE i.key_value =  h_sample.sample_no
+				 	 AND i.audit_table1 = 'SAMPLE'  AND i.audit_action1 = 'DELETE' 
+				 AND i.audit_date1 = i.[DELETE]), '1900-01-01') 
+    <= ISNULL((SELECT max(audit_date1)  FROM ref_tracking i
+	           WHERE i.key_value =  h_sample.sample_no 
+				 AND i.audit_table1 = 'SAMPLE'  AND i.audit_action1 = 'INSERT' 
+				 AND i.audit_date1 = i.[INSERT]) ,'1900-01-01')
  
-
-GO
-EXEC sys.sp_addextendedproperty @name=N'Comment', @value=N'The changing hash' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_current', @level2type=N'COLUMN',@level2name=N'dss_change_hash'
-GO
-EXEC sys.sp_addextendedproperty @name=N'Comment', @value=N'Record source' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_current', @level2type=N'COLUMN',@level2name=N'dss_record_source'
-GO
-EXEC sys.sp_addextendedproperty @name=N'Comment', @value=N'Date and time the row was loaded in the data vault' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_current', @level2type=N'COLUMN',@level2name=N'dss_load_date'
-GO
-EXEC sys.sp_addextendedproperty @name=N'Comment', @value=N'Date and time the row started in the data vault' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_current', @level2type=N'COLUMN',@level2name=N'dss_start_date'
-GO
-EXEC sys.sp_addextendedproperty @name=N'Comment', @value=N'Version number of a business key in the data vault' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_current', @level2type=N'COLUMN',@level2name=N'dss_version'
-GO
-EXEC sys.sp_addextendedproperty @name=N'Comment', @value=N'Date and time the row was inserted in the data vault' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_current', @level2type=N'COLUMN',@level2name=N'dss_create_time'
+ 
 GO

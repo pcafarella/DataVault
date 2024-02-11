@@ -14,10 +14,10 @@ EXEC sys.sp_dropextendedproperty @name=N'Comment' , @level0type=N'SCHEMA',@level
 GO
 EXEC sys.sp_dropextendedproperty @name=N'Comment' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_test_hroc_national_history', @level2type=N'COLUMN',@level2name=N'dss_change_hash'
 GO
-/****** Object:  View [bus].[s_test_hroc_national_history]    Script Date: 2/8/2024 5:20:00 PM ******/
+/****** Object:  View [bus].[s_test_hroc_national_history]    Script Date: 2/10/2024 10:31:02 PM ******/
 DROP VIEW [bus].[s_test_hroc_national_history]
 GO
-/****** Object:  View [bus].[s_test_hroc_national_history]    Script Date: 2/8/2024 5:20:00 PM ******/
+/****** Object:  View [bus].[s_test_hroc_national_history]    Script Date: 2/10/2024 10:31:02 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -68,7 +68,7 @@ s_test_hroc_national.dss_version,
 s_test_hroc_national.dss_create_time, 
 CASE WHEN r.hk_h_test IS NULL AND LEAD(s_test_hroc_national.dss_start_date) OVER(PARTITION BY h_test.hk_h_test  ORDER BY s_test_hroc_national.dss_start_date) IS NULL THEN s_test_hroc_national.dss_start_date ELSE
 		 LEAD(s_test_hroc_national.dss_start_date, 1, '9999-12-31') OVER(PARTITION BY h_test.hk_h_test  ORDER BY s_test_hroc_national.dss_start_date) END dss_end_date, 
- CASE WHEN LEAD(s_test_hroc_national.dss_start_date, 1, NULL) OVER(PARTITION BY s_test_hroc_national.hk_h_test ORDER BY s_test_hroc_national.dss_start_date) IS NOT NULL OR (r.hk_h_test IS NULL) THEN 'N' ELSE 'Y' END dss_current_flag 
+ CASE WHEN LEAD(s_test_hroc_national.dss_start_date, 1, NULL) OVER(PARTITION BY s_test_hroc_national.hk_h_test ORDER BY s_test_hroc_national.dss_start_date) IS NOT NULL OR r.hk_h_test IS NULL THEN 'N' ELSE 'Y' END dss_current_flag 
 FROM WSDataVault_dev_incremental.raw.s_test_hroc_national s_test_hroc_national
 JOIN raw.h_test on h_test.hk_h_test = s_test_hroc_national.hk_h_test
 LEFT JOIN bus.s_test_hroc_national_current r on r.hk_h_test = h_test.hk_h_test
