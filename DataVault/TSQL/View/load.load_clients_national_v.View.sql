@@ -1,4 +1,7 @@
-/****** Object:  View [load].[load_clients_national_v]    Script Date: 12/15/2023 2:09:16 PM ******/
+/****** Object:  View [load].[load_clients_national_v]    Script Date: 2/12/2024 11:28:26 AM ******/
+DROP VIEW [load].[load_clients_national_v]
+GO
+/****** Object:  View [load].[load_clients_national_v]    Script Date: 2/12/2024 11:28:26 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
