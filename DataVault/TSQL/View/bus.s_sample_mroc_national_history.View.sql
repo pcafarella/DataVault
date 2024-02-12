@@ -1,4 +1,7 @@
-/****** Object:  View [bus].[s_sample_mroc_national_history]    Script Date: 12/21/2023 12:52:58 PM ******/
+/****** Object:  View [bus].[s_sample_mroc_national_history]    Script Date: 2/10/2024 10:31:02 PM ******/
+DROP VIEW [bus].[s_sample_mroc_national_history]
+GO
+/****** Object:  View [bus].[s_sample_mroc_national_history]    Script Date: 2/10/2024 10:31:02 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -89,29 +92,12 @@ s_sample_mroc_national.dss_load_date,
 s_sample_mroc_national.dss_start_date, 
 s_sample_mroc_national.dss_version, 
 s_sample_mroc_national.dss_create_time, 
- CASE WHEN r.key_value IS NOT NULL AND LEAD(dss_start_date) OVER(PARTITION BY h_sample.hk_h_sample  ORDER BY dss_start_date) IS NULL THEN dss_start_date ELSE
-		 LEAD(dss_start_date, 1, '9999-12-31') OVER(PARTITION BY h_sample.hk_h_sample  ORDER BY dss_start_date) END dss_end_date, 
-CASE WHEN LEAD(dss_start_date, 1, NULL) OVER(PARTITION BY s_sample_mroc_national.hk_h_sample ORDER BY dss_start_date) IS NOT NULL OR (r.key_value IS NOT NULL AND ri.key_value is null) THEN 'N' ELSE 'Y' END dss_current_flag
+ CASE WHEN r.hk_h_sample IS NULL AND LEAD(s_sample_mroc_national.dss_start_date) OVER(PARTITION BY h_sample.hk_h_sample  ORDER BY s_sample_mroc_national.dss_start_date) IS NULL THEN s_sample_mroc_national.dss_start_date ELSE
+		 LEAD(s_sample_mroc_national.dss_start_date, 1, '9999-12-31') OVER(PARTITION BY h_sample.hk_h_sample  ORDER BY s_sample_mroc_national.dss_start_date) END dss_end_date, 
+CASE WHEN LEAD(s_sample_mroc_national.dss_start_date, 1, NULL) OVER(PARTITION BY s_sample_mroc_national.hk_h_sample ORDER BY s_sample_mroc_national.dss_start_date) IS NOT NULL OR r.hk_h_sample IS NULL THEN 'N' ELSE 'Y' END dss_current_flag
 FROM  raw.s_sample_mroc_national s_sample_mroc_national
 INNER JOIN raw.h_sample on h_sample.hk_h_sample = s_sample_mroc_national.hk_h_sample
-LEFT JOIN ref.r_record_tracking r on  r.key_value =  h_sample.sample_no AND r.audit_table = 'SAMPLE' AND r.audit_action = 'DELETE'
-LEFT JOIN ref.r_record_tracking ri on  ri.key_value =  h_sample.sample_no AND ri.audit_table = 'SAMPLE' AND  ri.audit_action = 'INSERT'
-
+LEFT JOIN bus.s_sample_mroc_national_current r on r.hk_h_sample = h_sample.hk_h_sample
   
-GO
-EXEC sys.sp_addextendedproperty @name=N'Comment', @value=N'The changing hash' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_history', @level2type=N'COLUMN',@level2name=N'dss_change_hash'
-GO
-EXEC sys.sp_addextendedproperty @name=N'Comment', @value=N'Record source' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_history', @level2type=N'COLUMN',@level2name=N'dss_record_source'
-GO
-EXEC sys.sp_addextendedproperty @name=N'Comment', @value=N'Date and time the row was loaded in the data vault' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_history', @level2type=N'COLUMN',@level2name=N'dss_load_date'
-GO
-EXEC sys.sp_addextendedproperty @name=N'Comment', @value=N'Date and time the row started in the data vault' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_history', @level2type=N'COLUMN',@level2name=N'dss_start_date'
-GO
-EXEC sys.sp_addextendedproperty @name=N'Comment', @value=N'Version number of a business key in the data vault' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_history', @level2type=N'COLUMN',@level2name=N'dss_version'
-GO
-EXEC sys.sp_addextendedproperty @name=N'Comment', @value=N'Date and time the row was inserted in the data vault' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_history', @level2type=N'COLUMN',@level2name=N'dss_create_time'
-GO
-EXEC sys.sp_addextendedproperty @name=N'Comment', @value=N'End date determined by the next Satellite change record dss_start_date' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_history', @level2type=N'COLUMN',@level2name=N'dss_end_date'
-GO
-EXEC sys.sp_addextendedproperty @name=N'Comment', @value=N'CurrentFlag ''N'' unless next Satellite change record dss_start_date is null, indicating this is the most current record.' , @level0type=N'SCHEMA',@level0name=N'bus', @level1type=N'VIEW',@level1name=N's_sample_mroc_national_history', @level2type=N'COLUMN',@level2name=N'dss_current_flag'
+ 
 GO

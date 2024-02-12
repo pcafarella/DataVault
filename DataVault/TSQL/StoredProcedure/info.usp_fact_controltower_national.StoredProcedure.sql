@@ -1,18 +1,21 @@
- IF Object_ID('info.usp_fact_controltower_national') IS NOT NULL
-	DROP PROCEDURE info.usp_fact_controltower_national
-
+/****** Object:  StoredProcedure [info].[usp_fact_controltower_national]    Script Date: 2/10/2024 10:31:02 PM ******/
+DROP PROCEDURE [info].[usp_fact_controltower_national]
+GO
+/****** Object:  StoredProcedure [info].[usp_fact_controltower_national]    Script Date: 2/10/2024 10:31:02 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE PROCEDURE [info].[usp_fact_controltower_national] @work_order_no varchar(50) = NULL
 AS 
  
--- exec info.usp_fact_controltower_national 'L1699291' -- 'L1663905'-- 'L1691793'--'L1695717' --'L1665725'
-
+-- exec info.usp_fact_controltower_national 'L1678011' --L1663905'--- 'L1691793'--'L1695717' --'L1665725'
 -- select top 1000 * from info.fact_controltower_national   order by  [Sample_no], test_no, Analysis_process_code,  department_level, CAST([Department_no] as int) 
 -- select top 1000 * from info.fact_controltower_national  where [Sample_no] LIKE 'L1614785-01' and product_code_base = 'V8260TCLP'  order by  [Sample_no], test_no, Analysis_process_code,  department_level, CAST([Department_no] as int) 
 
 if object_id('info.fact_controltower_national') IS NOT NULL  DROP TABLE info.fact_controltower_national
- 
+  
   SELECT test_no
       ,test_no_bkcc
       ,hk_h_test	 
@@ -31,7 +34,7 @@ if object_id('info.fact_controltower_national') IS NOT NULL  DROP TABLE info.fac
 	  ,CASE WHEN matnum_base IS NULL THEN substring(test_no_bkcc, charindex( '|',test_no_bkcc,charindex( '|',test_no_bkcc ))+1, LEN(test_no_bkcc)) ELSE matnum_base END matnum_base 
 	  ,product_code_parent, matnum_parent
 	  INTO #test_wo_ap
-	  FROM (SELECT  b.test_no, test_no_bkcc, b.sample_no, b.hk_h_sample,
+	  FROM (SELECT  b.test_no, b.test_no_bkcc, b.sample_no, b.hk_h_sample,
 					b.product_code, b.product_code_bkcc,
 					p.method,
 					CASE WHEN CHARINDEX('|', product_code_bkcc) = 0 THEN product_code_bkcc ELSE LEFT(product_code_bkcc,  CHARINDEX('|', product_code_bkcc)-1) END matnum_base,
@@ -85,10 +88,12 @@ INNER JOIN #test tt ON tt.product_code_base = mpml.prod AND tt.matnum_base = mpm
 WHERE mh.active = 'Y' and mh.method_type = 'P' and mh.esc_method_name like 'PrePrep%'
 GROUP BY pm.product_code, pm.product_code_bkcc  --283  01:21
 
+
 SELECT #test.test_no, #test.test_no_bkcc, #test.hk_h_test, #test.sample_no, #test.hk_h_sample,  #test.receivedate, #test.holddate, #test.duedate, #test.duedate2,
 		#test.product_code, #test.hk_h_product, #test.matnum, #test.method, #test.product_code_base, #test.matnum_base, 
 		#test.analysis_process_code, #test.analysis_process_code_bkcc, #test.hk_h_analysis_process ,
-        h_department.hk_h_department, h_department.department_no, dt.department_level, dt.department_type
+        h_department.hk_h_department, h_department.department_no, dt.department_level, dt.department_type,
+		s1.process_status_code, s1.process_status_date
 INTO #test_department 
 FROM #test
 INNER JOIN raw.l_department_test_schedule l on l.hk_h_test = #test.hk_h_test 
@@ -96,12 +101,13 @@ INNER JOIN raw.h_department on h_department.hk_h_department = l.hk_h_department
 INNER JOIN mas.department_type dt on dt.department_no =  h_department.department_no 
 INNER JOIN bus.s_department_test_schedule_hroc_national_current s1 on s1.hk_l_department_test_schedule = l.hk_l_department_test_schedule
 WHERE 1=2
-
+ 
 INSERT #test_department 
 SELECT #test.test_no, #test.test_no_bkcc, #test.hk_h_test, #test.sample_no, #test.hk_h_sample,  #test.receivedate, #test.holddate, #test.duedate, #test.duedate2,
 		#test.product_code, #test.hk_h_product, #test.matnum, #test.method, #test.product_code_base, #test.matnum_base, 
 		#test.analysis_process_code, #test.analysis_process_code_bkcc, #test.hk_h_analysis_process ,
-        h_department.hk_h_department, h_department.department_no, dt.department_level, dt.department_type
+        h_department.hk_h_department, h_department.department_no, dt.department_level, dt.department_type,
+		s1.process_status_code, s1.process_status_date
 FROM #test
 INNER JOIN raw.l_department_test_schedule l on l.hk_h_test = #test.hk_h_test 
 INNER JOIN raw.h_department on h_department.hk_h_department = l.hk_h_department 
@@ -110,18 +116,19 @@ INNER JOIN bus.s_department_test_schedule_hroc_national_current s1 on s1.hk_l_de
 WHERE #test.hk_h_analysis_process IS NOT NULL  --3788788 02:28
 CREATE UNIQUE INDEX #test_department_IDX1 on #test_department(hk_h_test, hk_h_department, department_no)    WITH (IGNORE_DUP_KEY=ON  )
 
-INSERT #test_department 
+INSERT #test_department  
 SELECT #test.test_no, #test.test_no_bkcc, #test.hk_h_test, #test.sample_no, #test.hk_h_sample,  #test.receivedate, #test.holddate, #test.duedate, #test.duedate2,
 		#test.product_code, #test.hk_h_product, #test.matnum, #test.method, #test.product_code_base, #test.matnum_base, 
 		#test.analysis_process_code, #test.analysis_process_code_bkcc, #test.hk_h_analysis_process ,
-        h_department.hk_h_department, h_department.department_no, dt.department_level, dt.department_type
-FROM #test
-INNER JOIN raw.l_department_test_schedule l on l.hk_h_test = #test.hk_h_test 
-INNER JOIN raw.h_department on h_department.hk_h_department = l.hk_h_department 
+        h_department.hk_h_department, h_department.department_no, dt.department_level, dt.department_type,
+		s1.process_status_code, s1.process_status_date
+FROM #test  
+INNER JOIN #temppreprep preprep ON preprep.product_code = #test.product_code_base and preprep.product_code_bkcc =#test.matnum_base
+INNER JOIN raw.h_department on department_no = 1
+INNER JOIN raw.l_department_test_schedule l on l.hk_h_test = #test.hk_h_test and l.hk_h_department = h_department.hk_h_department
 INNER JOIN mas.department_type dt on dt.department_no =  h_department.department_no 
 INNER JOIN bus.s_department_test_schedule_hroc_national_current s1 on s1.hk_l_department_test_schedule = l.hk_l_department_test_schedule
-WHERE #test.hk_h_analysis_process IS NOT NULL  --3788788 02:28
-CREATE UNIQUE INDEX #test_department_IDX1 on #test_department(hk_h_test, hk_h_department, department_no)    WITH (IGNORE_DUP_KEY=ON  )
+WHERE #test.hk_h_analysis_process IS NOT NULL   --  0  00:17
 
 -- Create table
 SELECT * 
@@ -130,15 +137,15 @@ FROM (
 select  t.test_no,t.test_no_bkcc, t.hk_h_test, t.sample_no, t.hk_h_sample,  t.receivedate, t.holddate, t.duedate, t.duedate2,
 		t.product_code, t.hk_h_product, t.matnum, t.method, t.product_code_base, t.matnum_base,   t.product_code_parent, t.matnum_parent,
 		t.analysis_process_code, t.analysis_process_code_bkcc, t.hk_h_analysis_process, 
-		td.hk_h_department, td.department_no, td.department_level, td.department_type, COALESCE(sc.process_status_batch_no,'')  process_status_batch_no,
-		CAST(NULL AS VARCHAR(50)) process_status_code,  CAST(NULL AS DATETIME) process_status_date, 
-		row_number() OVER (PARTITION BY t.hk_h_test, td.hk_h_department, sc.process_status_batch_no ORDER BY t.receivedate) rank_no, 0 batch_no_cnt 
+		td.hk_h_department, td.department_no, td.department_level, td.department_type, COALESCE(s1.process_status_batch_no,'')  process_status_batch_no,
+		s1.process_status_code, s1.process_status_date,
+		row_number() OVER (PARTITION BY t.hk_h_test, td.hk_h_department, s1.process_status_batch_no ORDER BY t.receivedate) rank_no, 0 batch_no_cnt 
 FROM #test_department td
 INNER JOIN #test t ON t.hk_h_test = td.hk_h_test
 INNER JOIN raw.l_test_product tp ON tp.hk_h_test = t.hk_h_test
 INNER JOIN raw.h_product on h_product.product_code = t.product_code_base and product_code_bkcc = t.matnum_base
 INNER JOIN raw.l_department_test_schedule sh ON sh.hk_h_test =  t.hk_h_test and sh.hk_h_department =  td.hk_h_department 
-INNER JOIN bus.s_department_test_schedule_hroc_national_current sc on sc.hk_l_department_test_schedule = sh.hk_l_department_test_schedule
+INNER JOIN bus.s_department_test_schedule_hroc_national_current s1 on s1.hk_l_department_test_schedule = sh.hk_l_department_test_schedule
 ) a
 WHERE 1=2
 CREATE NONCLUSTERED INDEX [<Name of Missing Index, sysname,>]ON [dbo].[#test_department_batch] ([hk_h_test],[department_no])  INCLUDE ([hk_h_analysis_process],[department_level])
@@ -150,16 +157,16 @@ FROM (
 select  h_test.test_no, h_test.test_no_bkcc, h_test.hk_h_test,  t.sample_no, t.hk_h_sample,  t.receivedate, t.holddate, t.duedate, t.duedate2,
 		t.product_code, t.hk_h_product, t.matnum, t.method, t.product_code_base, t.matnum_base,  t.product_code_parent, t.matnum_parent,
 		t.analysis_process_code, t.analysis_process_code_bkcc, t.hk_h_analysis_process, 
-		td.hk_h_department, td.department_no,  td.department_level, td.department_type, COALESCE(sc.process_status_batch_no,'')  process_status_batch_no,
-		process_status_code, process_status_date, 
-		row_number() OVER (PARTITION BY h_test.hk_h_test, td.hk_h_department  ORDER BY  sc.process_status_batch_no DESC, t.receivedate, sc.process_status_date, sc.dss_version) rank_no ,0 batch_no_cnt
+		td.hk_h_department, td.department_no,  td.department_level, td.department_type, COALESCE(s1.process_status_batch_no,'')  process_status_batch_no,
+		s1.process_status_code, s1.process_status_date, 
+		row_number() OVER (PARTITION BY h_test.hk_h_test, td.hk_h_department  ORDER BY  s1.process_status_batch_no DESC, t.receivedate, s1.process_status_date, s1.dss_version) rank_no ,0 batch_no_cnt 
 FROM #test_department td
 INNER JOIN #test t ON t.hk_h_test = td.hk_h_test
 INNER JOIN raw.l_test_product tp ON tp.hk_h_test = td.hk_h_test
 INNER JOIN raw.h_product on h_product.product_code = t.product_code_base and product_code_bkcc = t.matnum_base
 INNER JOIN raw.h_test  ON h_test.test_no = t.sample_no + '|'+ t.product_code_base AND h_test.test_no_bkcc = t.matnum_base
 LEFT JOIN raw.l_department_test_schedule sh ON sh.hk_h_test =  h_test.hk_h_test and sh.hk_h_department =  td.hk_h_department 
-LEFT JOIN bus.s_department_test_schedule_hroc_national_current  sc on sc.hk_l_department_test_schedule = sh.hk_l_department_test_schedule
+LEFT JOIN bus.s_department_test_schedule_hroc_national_current  s1 on s1.hk_l_department_test_schedule = sh.hk_l_department_test_schedule
 LEFT JOIN bus.s_test_hroc_national_current s on s.hk_h_test = h_test.hk_h_test
 WHERE t.product_code_parent = '') a
 WHERE rank_no = 1    --2,649,529  02:25
@@ -184,33 +191,38 @@ BEGIN
 	select  t.test_no,t.test_no_bkcc, t.hk_h_test, t.sample_no, t.hk_h_sample,  t.receivedate, t.holddate, t.duedate, t.duedate2,
 			t.product_code, t.hk_h_product, t.matnum, t.method, t.product_code_base, t.matnum_base, t.product_code_parent, t.matnum_parent,
 			t.analysis_process_code, t.analysis_process_code_bkcc, t.hk_h_analysis_process, 
-			td.hk_h_department, td.department_no,  td.department_level, td.department_type, COALESCE(sc.process_status_batch_no,'')  process_status_batch_no,
-			process_status_code,  process_status_date, 
-			row_number() OVER (PARTITION BY t.hk_h_test, td.hk_h_department ORDER BY sc.process_status_batch_no DESC, t.receivedate, sc.process_status_date, sc.dss_version) rank_no, 0 batch_no_cnt  
+			td.hk_h_department, td.department_no,  td.department_level, td.department_type, COALESCE(s1.process_status_batch_no,'')  process_status_batch_no,
+			s1.process_status_code, s1.process_status_date, 
+			row_number() OVER (PARTITION BY t.hk_h_test, td.hk_h_department ORDER BY s1.process_status_batch_no DESC, t.receivedate, s1.process_status_date, s1.dss_version) rank_no, 0 batch_no_cnt 
 	FROM #test_department td
 	INNER JOIN #parenttest t ON t.hk_h_test = td.hk_h_test
 	INNER JOIN bus.s_test_hroc_national_current s on s.hk_h_test = t.hk_h_test
 	INNER JOIN raw.l_department_test_schedule sh ON sh.hk_h_test =  t.hk_h_test and sh.hk_h_department =  td.hk_h_department 
-	INNER JOIN bus.s_department_test_schedule_hroc_national_current sc on sc.hk_l_department_test_schedule = sh.hk_l_department_test_schedule
+	INNER JOIN bus.s_department_test_schedule_hroc_national_current s1 on s1.hk_l_department_test_schedule = sh.hk_l_department_test_schedule
 	WHERE t.product_code_parent != '') a
 	WHERE rank_no = 1  --1139259  02:04
 	CREATE NONCLUSTERED INDEX [<Name of Missing Index2, sysname,>]ON [dbo].[#test_department_batch] ([department_level],[process_status_batch_no]) INCLUDE ([hk_h_test],[hk_h_analysis_process])
 END
 
-SELECT l.hk_h_test, test_no, test_no_bkcc,l. hk_h_department, department_no, MAX(process_status_date) process_status_date , count(distinct process_status_batch_no) batch_no_cnt
+SELECT l.hk_h_test, test_no, test_no_bkcc,l. hk_h_department, department_no, MAX(l.process_status_date) process_status_date , count(distinct s.process_status_batch_no) batch_no_cnt 
 INTO #latest_track
 FROM raw.l_department_test_status l
 INNER JOIN raw.s_department_test_status_tran_national s on s.hk_l_department_test_status = l.hk_l_department_test_status
 JOIN #test_department d on d.hk_h_test = l.hk_h_test and d.hk_h_department = l.hk_h_department
 WHERE department_level IN (1,2,3)
 GROUP BY l.hk_h_test, test_no, test_no_bkcc, l.hk_h_department, department_no --2182394 01:43
-CREATE NONCLUSTERED INDEX [<Name of Missing Index, sysname,>] ON [dbo].[#latest_track] ([hk_h_test],[process_status_date]) INCLUDE ([test_no],[test_no_bkcc],[department_no],[batch_no_cnt])
+CREATE NONCLUSTERED INDEX [<Name of Missing Index, sysname,>] ON [dbo].[#latest_track] ([hk_h_test],[process_status_date]) INCLUDE ([test_no],[test_no_bkcc],[department_no])
  
 SELECT hk_h_test, test_no, test_no_bkcc, process_status_date , MAX(department_no) department_no, max(batch_no_cnt) batch_no_cnt
 INTO #driving_dept
 FROM #latest_track t 
 WHERE process_status_date = (SELECT MAX(process_status_date) from #latest_track i where i.hk_h_test = t.hk_h_test)  
 GROUP BY hk_h_test, test_no, test_no_bkcc, process_status_date   --764013  00:03
+
+ UPDATE b
+ SET batch_no_cnt = t.batch_no_cnt
+ FROM #test_department_batch b
+ INNER JOIN #latest_track t on t.hk_h_test = b.hk_h_test and t.hk_h_department = b.hk_h_department
 
 SELECT b.hk_h_test,  b.hk_h_analysis_process, b.department_no, department_level, dd.batch_no_cnt,
  	(SELECT ISNULL(MAX(process_status_batch_no),'') FROM raw.l_department_test_status i 
@@ -222,20 +234,14 @@ FROM #test_department_batch b
 INNER JOIN #driving_dept dd ON dd.hk_h_test = b.hk_h_test  AND dd.department_no = b.department_no   -- 764013  00:15
 CREATE NONCLUSTERED INDEX [<Name of Missing Index, sysname,>]ON [dbo].[#test_driving_batch] ([hk_h_test],[hk_h_analysis_process]) INCLUDE ([process_status_batch_no])
 
-UPDATE tdb
-SET batch_no_cnt = tb.batch_no_cnt  
-FROM #test_department_batch tdb
-INNER JOIN #test_driving_batch  tb on tb.hk_h_test = tdb.hk_h_test and tb.hk_h_analysis_process = tdb.hk_h_analysis_process
-
 -- reset status on redo
 UPDATE tdb
-SET process_status_code = 'NEED', process_status_batch_no = '', tdb.batch_no_cnt = tb.batch_no_cnt
+SET process_status_code = 'NEED', process_status_batch_no = '' 
 FROM #test_department_batch tdb
-INNER JOIN #test_driving_batch  tb on tb.hk_h_test = tdb.hk_h_test and tb.hk_h_analysis_process = tdb.hk_h_analysis_process
+INNER JOIN #test_driving_batch  tb on tb.hk_h_test = tdb.hk_h_test and tb.hk_h_analysis_process = tdb.hk_h_analysis_process-- and tb.department_no = tdb.department_no
 WHERE tdb.process_status_batch_no != tb.process_status_batch_no  
   AND tdb.department_level > tb.department_level
   AND tb.batch_no_cnt > 1   --139742 00:07
-
 
 SELECT  tdb.hk_h_test, tdb.test_no, tdb.hk_h_department , tdb.department_no, ts.process_status_code, ts.process_status_date, COALESCE(s.process_status_batch_no ,'') process_status_batch_no,
         ts.hk_l_department_test_status, batch_status_rank,
@@ -253,18 +259,21 @@ INNER JOIN #batch_status ON #batch_status.process_status_code = ts.process_statu
 WHERE ISNULL(s.lasttool,'lasttool') != 'PREPLOGINTOOL'  --6951440  03:27
 CREATE INDEX #batch_status_rank_IDX1  on #batch_status_rank(hk_h_test, hk_h_department,  department_no, process_status_date, process_status_batch_no, process_status_code)  --  00:24
 
-SELECT td.hk_h_test ,td.test_no,  td.test_no_bkcc, td.hk_h_department, td.department_no ,  r.process_status_code, r.process_status_date, r.process_status_batch_no ,td.department_level, td.department_type, td.hk_h_analysis_process, td.analysis_process_code, td.analysis_process_code_bkcc
+SELECT td.hk_h_test ,td.test_no,  td.test_no_bkcc, td.hk_h_department, td.department_no, td.department_level, td.department_type, td.hk_h_analysis_process, td.analysis_process_code, td.analysis_process_code_bkcc,
+		ISNULL(r.process_status_code, td.process_status_code) process_status_code, 
+		ISNULL(r.process_status_date,td.process_status_date) process_status_date, 
+		ISNULL(r.process_status_batch_no,td.process_status_batch_no) process_status_batch_no 
 INTO #test_department_batch_status
 FROM #test_department_batch td 
-INNER JOIN #batch_status_rank r on r.hk_h_test = td.hk_h_test AND  r.hk_h_department = td.hk_h_department and r.department_no = td.department_no  
-WHERE batch_status_date_rank = 1 AND batch_status_date_dup_row_no  = 1    --3549257  00:16
-CREATE  INDEX #test_department_batch_status_IDX1 on #test_department_batch_status(hk_h_test, test_no, test_no_bkcc, hk_h_department,  department_no, process_status_date, process_status_batch_no, process_status_code)   -- 0015
+LEFT JOIN #batch_status_rank r on r.hk_h_test = td.hk_h_test AND  r.hk_h_department = td.hk_h_department and r.department_no = td.department_no  
+WHERE ISNULL(batch_status_date_rank,1) = 1 AND ISNULL(batch_status_date_dup_row_no,1)  = 1    --3549257  00:16
+CREATE INDEX #test_department_batch_status_IDX1 on #test_department_batch_status(hk_h_test, test_no, test_no_bkcc, hk_h_department,  department_no, process_status_date, process_status_batch_no, process_status_code)   -- 0015
 
 -- overwrite orderdetail data with ordertrack if there
 UPDATE t
-SET process_status_code = s.process_status_code,
-	process_status_date = s.process_status_date,
-	process_status_batch_no = s.process_status_batch_no  
+SET process_status_code = ISNULL(s.process_status_code, t.process_status_code),
+	process_status_date = ISNULL(s.process_status_date, t.process_status_date),
+	process_status_batch_no = ISNULL(s.process_status_batch_no, t.process_status_batch_no)
 FROM #test_department_batch t 
 INNER JOIN #test_department_batch_status s on s.hk_h_test = t.hk_h_test and s.hk_h_department = t.hk_h_department 
   AND s.department_no = t.department_no  and s.process_status_batch_no = t.process_status_batch_no  
@@ -272,15 +281,17 @@ WHERE s.process_status_date = (SELECT MAX(process_status_date) process_status_da
                                  FROM #test_department_batch_status i 
                                 WHERE i.hk_h_test = s.hk_h_test and i.hk_h_department = s.hk_h_department AND i.hk_h_analysis_process = s.hk_h_analysis_process AND i.process_status_batch_no = s.process_status_batch_no)
   AND NOT (t.department_no = 2 and t.department_level = 3)   -- 3364074 00:33
-
+  AND NOT (t.process_status_code = s.process_status_code AND
+	       t.process_status_date = s.process_status_date AND
+	       t.process_status_batch_no = s.process_status_batch_no )
+		   
 -- reset analytical batch if prep_batch is different and driving 
 UPDATE tdb
 SET  process_status_batch_no = tb.process_status_batch_no
 FROM #test_department_batch tdb
 INNER JOIN #test_driving_batch  tb on tb.hk_h_test = tdb.hk_h_test and tb.hk_h_analysis_process = tdb.hk_h_analysis_process
 WHERE tdb.process_status_batch_no != '' AND tdb.process_status_batch_no != tb.process_status_batch_no  
-  AND tdb.department_level = 3   --0  00:05
-  and tdb.batch_no_cnt > 1
+  AND tdb.department_level = 3  AND tdb.batch_no_cnt > 1
 
 SELECT * 
 INTO #temppvtmindates
@@ -419,6 +430,7 @@ SELECT  isnull(w.work_order_no, left(sample_no,8)) work_order_no,
 		sinvoice.original_invoice_date, 
 		sinvoice.invoicedate,
 		batch_no_cnt,
+		0 warning_no,
 		CASE LEFT(product_code_base,3) WHEN 'ALL' THEN 75  ELSE 80  END operating_lab, 
 	    n.on_behalf_of_lab_no,
 		n2.on_behalf_of_lab_no subout_lab_no
@@ -444,6 +456,44 @@ LEFT JOIN mas.work_location_map n on n.acctnum = sl.account_no and n.system_id =
 LEFT JOIN ref.r_seedpak_prep_data prep on  prep.datapoint_id = 630  and prep.worknum =batch_grain.process_status_batch_no and dt.department_level = 3
 LEFT JOIN  mas.work_location_map n2 on n2.acctnum = prep.datavalue and n2.system_id = 'lims80'
     AND n2.operating_lab_no = CASE WHEN LEFT(product_code_base,3) = 'ALL' THEN 75 ELSE 80 end
+ 
+UPDATE f
+SET warning_no = 0
+FROM info.fact_controltower_national f
 
- RETURN
+UPDATE f
+SET warning_no = 1
+FROM info.fact_controltower_national f
+WHERE EXISTS (SELECT 1 FROM ref.r_record_tracking 
+               WHERE key_value = f.sample_no AND audit_action = 'DELETE' 
+                 AND audit_field = 'RECORD' AND audit_table in ('SAMPLE','ORDERMAST')
+				 AND new_value LIKE '%'+f.product_code_base+'%' 
+				 AND new_value NOT LIKE '%PPRODREF:_%' )
+
+UPDATE f
+SET warning_no = 2
+FROM info.fact_controltower_national f
+ WHERE batch_no_cnt > 1  
+
+UPDATE f
+SET warning_no = 3
+FROM info.fact_controltower_national f
+WHERE  process_status_code = 'DONE' AND work_complete_date is null 
+AND EXISTS (SELECT 1 FROM info.fact_controltower_national r
+                WHERE r.sample_no= f.sample_no and r.product_code_base = f.product_code_base 
+				AND r.department_level > f.department_level
+				AND (r.work_complete_date is NOT NULL OR r.process_status_code = 'DONE'))
+	 
+UPDATE f
+SET warning_no = 4
+FROM info.fact_controltower_national f
+WHERE process_status_code ='CAPT' 
+AND NOT EXISTS (SELECT 1 FROM #batch_status_rank r
+			WHERE r.test_no LIKE f.sample_no+'%'+f.product_code_base+'%'
+			AND r.department_no = f.department_no
+			AND r.process_status_code = 'DONE'
+			AND r.process_status_date >= f.process_status_date)
+ 
+
+  RETURN
 GO

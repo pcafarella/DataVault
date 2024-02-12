@@ -1,7 +1,7 @@
-/****** Object:  StoredProcedure [bus].[usp_bridge_controltower_national]    Script Date: 2/5/2024 10:41:23 AM ******/
+/****** Object:  StoredProcedure [bus].[usp_bridge_controltower_national]    Script Date: 2/8/2024 9:19:56 AM ******/
 DROP PROCEDURE [bus].[usp_bridge_controltower_national]
 GO
-/****** Object:  StoredProcedure [bus].[usp_bridge_controltower_national]    Script Date: 2/5/2024 10:41:23 AM ******/
+/****** Object:  StoredProcedure [bus].[usp_bridge_controltower_national]    Script Date: 2/8/2024 9:19:56 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
