@@ -1,7 +1,7 @@
-/****** Object:  View [info].[fact_controltower_ap2_v]    Script Date: 2/12/2024 11:28:26 AM ******/
+/****** Object:  View [info].[fact_controltower_ap2_v]    Script Date: 2/12/2024 2:38:03 PM ******/
 DROP VIEW [info].[fact_controltower_ap2_v]
 GO
-/****** Object:  View [info].[fact_controltower_ap2_v]    Script Date: 2/12/2024 11:28:26 AM ******/
+/****** Object:  View [info].[fact_controltower_ap2_v]    Script Date: 2/12/2024 2:38:03 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

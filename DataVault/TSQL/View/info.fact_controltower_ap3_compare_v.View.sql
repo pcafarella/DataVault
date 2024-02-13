@@ -1,7 +1,7 @@
-/****** Object:  View [info].[fact_controltower_ap3_compare_v]    Script Date: 2/12/2024 11:28:26 AM ******/
+/****** Object:  View [info].[fact_controltower_ap3_compare_v]    Script Date: 2/12/2024 2:38:03 PM ******/
 DROP VIEW [info].[fact_controltower_ap3_compare_v]
 GO
-/****** Object:  View [info].[fact_controltower_ap3_compare_v]    Script Date: 2/12/2024 11:28:26 AM ******/
+/****** Object:  View [info].[fact_controltower_ap3_compare_v]    Script Date: 2/12/2024 2:38:03 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15,8 +15,9 @@ GO
 
 
 
+
  
-CREATE                   VIEW [info].[fact_controltower_ap3_compare_v] AS   
+CREATE                     VIEW [info].[fact_controltower_ap3_compare_v] AS   
 
 --select top 100 * from [info].[fact_controltower_ap3_compare_v] where  [Sample Nbr] =   'L1700676-01'  
 
@@ -53,7 +54,7 @@ SELECT work_order_no [Work Order Nbr]
 	  ,preprep_dept_avail_status_date [PrePrep Available] 
 	  ,preprep_dept_batch_status_date [PrePrep Batched] 
 	  ,preprep_dept_done_status_date [PrePrep Complete] 
-	  ,preprep_dept_attempt_count [PrePrep Attempt Count]
+	  ,preprep_dept_batch_no_cnt [PrePrep Attempt Count]
 	 	
   	  ,prep_department_no [Prep Dept Nbr]
 	  ,prep_department_short_name [Prep Dept Abbrev] 
@@ -64,7 +65,7 @@ SELECT work_order_no [Work Order Nbr]
 	  ,prep_dept_batch_status_date [Prep Batched] 
 	  ,prep_dept_inprogress_status_date [Prep Benchwork Started] 
 	  ,prep_dept_done_status_date [Prep Complete] 
-	  ,prep_dept_attempt_count [Prep Attempt Count]
+	  ,prep_dept_batch_no_cnt [Prep Attempt Count]
 
 
 	  ,analysis_department_no [Analysis Dept Nbr] 
@@ -79,7 +80,7 @@ SELECT work_order_no [Work Order Nbr]
 	  ,analysis_dept_done_status_date [Second Review Complete]
 	  ,'' [Analysis Instrument]
 	  ,'' [Location]
-	  ,analysis_dept_attempt_count [Analysis Attempt Count]
+	  ,analysis_dept_batch_no_cnt [Analysis Attempt Count]
 
 	  ,reporting_department_no [Reporting Dept Nbr]
 	  ,reporting_department_short_name [Reporting Dept Abbrev]
