@@ -8,10 +8,10 @@ SET QUOTED_IDENTIFIER ON
 GO
 
  CREATE PROCEDURE [info].[usp_fact_controltower_national_ap2]    @work_order_no varchar(50) = NULL -- 'L1577869'-- 'L1632346'--'L1645127'--L1643669'--'L1642261'-- 'L1639141'--'L1641864' -- ='L1642911'-- 'L1642261'---l1641985'  --='L1641864'--'L1638501'--'L1641864'--'L1641017'--'L1636842'  --= 'L1642891'  --'L1629949'-- 'L1622150'--'L1637130' --'L1621899'
-AS 
+AS  
 
--- exec info.usp_fact_controltower_national_ap2 'L1704609' --'L1688539'--'L1699159'--'L1698718'--'L1699291' --'L1663905'-- 'L1695196'  -- 'L1695618'  'L1672958'    'L1693822' 
--- select top 1000 * from info.fact_controltower_national_ap2   WHERE sample_no LIKE '%01%' and  (analysis_process_code like 'V8260BTEX') order by   sample_no, analysis_process_code, analysis_process_code_bkcc
+-- exec info.usp_fact_controltower_national_ap2 'L1703800' --'L1688539'--'L1699159'--'L1698718'--'L1699291' --'L1663905'-- 'L1695196'  -- 'L1695618'  'L1672958'    'L1693822' 
+-- select top 1000 * from info.fact_controltower_national_ap2   WHERE sample_no LIKE '%09%' and  (analysis_process_code like 'DODICP') order by   sample_no, analysis_process_code, analysis_process_code_bkcc
 
 if object_id('info.fact_controltower_national_ap2') IS NOT NULL  DROP TABLE info.fact_controltower_national_ap2
  SELECT [work_order_no]
@@ -187,7 +187,7 @@ SELECT sample_no, analysis_process_code, analysis_process_code_bkcc,   departmen
 INTO #preprep_status
 FROM (
 SELECT l.sample_no, l.analysis_process_code, l.analysis_process_code_bkcc,   l.department_no,  l.process_status_code,  ISNULL(l.process_status_batch_no,'') process_status_batch_no, 
-		rank() over (PARTITION BY l.sample_no, l.analysis_process_code, l.analysis_process_code_bkcc,   l.department_no order by batch_status_rank) rankno
+		rank() over (PARTITION BY l.sample_no, l.analysis_process_code, l.analysis_process_code_bkcc,   l.department_no order by batch_status_rank DESC) rankno
 FROM #preprep_status1 l
 INNER JOIN #batch_status s ON s.process_status_code = l.process_status_code
 INNER JOIN #temp1 t on t.sample_no = l.sample_no and t.analysis_process_code = l.analysis_process_code and t.analysis_process_code_bkcc = l.analysis_process_code_bkcc    and t.department_no = l.department_no  and t.max_process_status_rank = s.batch_status_rank) a
@@ -206,7 +206,7 @@ SELECT sample_no, analysis_process_code, analysis_process_code_bkcc,   departmen
 INTO #analytical_status 
 FROM (
 SELECT l.sample_no, l.analysis_process_code, l.analysis_process_code_bkcc,   l.department_no,  l.process_status_code,  ISNULL(l.process_status_batch_no,'') process_status_batch_no, 
-		rank() over (PARTITION BY l.sample_no, l.analysis_process_code, l.analysis_process_code_bkcc,   l.department_no order by batch_status_rank) rankno
+		rank() over (PARTITION BY l.sample_no, l.analysis_process_code, l.analysis_process_code_bkcc,   l.department_no order by batch_status_rank DESC) rankno
 FROM #analytical_status1  l
 INNER JOIN #batch_status s ON s.process_status_code = l.process_status_code
 INNER JOIN #temp1 t on t.sample_no = l.sample_no and t.analysis_process_code = l.analysis_process_code and t.analysis_process_code_bkcc = l.analysis_process_code_bkcc    and t.department_no = l.department_no  and t.max_process_status_rank = s.batch_status_rank) a
@@ -226,7 +226,7 @@ SELECT sample_no, analysis_process_code, analysis_process_code_bkcc,   departmen
 INTO #prep_status
 FROM (
 SELECT l.sample_no, l.analysis_process_code, l.analysis_process_code_bkcc,   l.department_no,  l.process_status_code,  ISNULL(l.process_status_batch_no,'') process_status_batch_no, 
-		rank() over (PARTITION BY l.sample_no, l.analysis_process_code, l.analysis_process_code_bkcc,   l.department_no order by batch_status_rank) rankno
+		rank() over (PARTITION BY l.sample_no, l.analysis_process_code, l.analysis_process_code_bkcc,   l.department_no order by batch_status_rank DESC) rankno
 FROM   #prep_status1 l
 INNER JOIN #batch_status s ON s.process_status_code = l.process_status_code
 INNER JOIN #temp1 t on t.sample_no = l.sample_no and t.analysis_process_code = l.analysis_process_code and t.analysis_process_code_bkcc = l.analysis_process_code_bkcc    and t.department_no = l.department_no  and t.max_process_status_rank = s.batch_status_rank) a
@@ -246,7 +246,7 @@ SELECT sample_no, analysis_process_code, analysis_process_code_bkcc,   departmen
 INTO #reporting_status
 FROM (
 SELECT l.sample_no, l.analysis_process_code, l.analysis_process_code_bkcc,   l.department_no,  l.process_status_code,  ISNULL(l.process_status_batch_no,'') process_status_batch_no, 
-		rank() over (PARTITION BY l.sample_no, l.analysis_process_code, l.analysis_process_code_bkcc,   l.department_no order by batch_status_rank) rankno
+		rank() over (PARTITION BY l.sample_no, l.analysis_process_code, l.analysis_process_code_bkcc,   l.department_no order by batch_status_rank DESC) rankno
 FROM  #reporting_status1 l
 INNER JOIN #batch_status s ON s.process_status_code = l.process_status_code
 INNER JOIN #temp1 t on t.sample_no = l.sample_no and t.analysis_process_code = l.analysis_process_code and t.analysis_process_code_bkcc = l.analysis_process_code_bkcc    and t.department_no = l.department_no  and t.max_process_status_rank = s.batch_status_rank) a
@@ -265,7 +265,7 @@ SELECT sample_no, analysis_process_code, analysis_process_code_bkcc,   departmen
 INTO #invoice_status
 FROM (
 SELECT l.sample_no, l.analysis_process_code, l.analysis_process_code_bkcc,   l.department_no,  l.process_status_code,  ISNULL(l.process_status_batch_no,'') process_status_batch_no, 
-		rank() over (PARTITION BY l.sample_no, l.analysis_process_code, l.analysis_process_code_bkcc,   l.department_no order by batch_status_rank) rankno
+		rank() over (PARTITION BY l.sample_no, l.analysis_process_code, l.analysis_process_code_bkcc,   l.department_no order by batch_status_rank DESC) rankno
 FROM   #invoice_status1 l
 INNER JOIN #batch_status s ON s.process_status_code = l.process_status_code
 INNER JOIN #temp1 t on t.sample_no = l.sample_no and t.analysis_process_code = l.analysis_process_code and t.analysis_process_code_bkcc = l.analysis_process_code_bkcc    and t.department_no = l.department_no  and t.max_process_status_rank = s.batch_status_rank) a
@@ -294,26 +294,43 @@ FROM #prep_status a
 INNER JOIN mas.department_type dt ON dt.department_no =  a.department_no
 WHERE a.department_no = 23 and a.analysis_process_code_bkcc =  'LEACHATE' and dt.department_level = 2   
 
---pivot batch numbers for grain
 ;WITH allbatch AS (
-SELECT 1.00 department_level, sample_no, analysis_process_code, analysis_process_code_bkcc, department_no, process_status_batch_no from #login
+SELECT 1.00 department_level, sample_no, analysis_process_code, analysis_process_code_bkcc, department_no, process_status_batch_no, f.process_status_code, s.batch_status_rank
+FROM #login_status1 f
+INNER JOIN #batch_status s on s.process_status_code = f.process_status_code
 UNION
-SELECT 1.00 department_level, sample_no, analysis_process_code, analysis_process_code_bkcc, department_no, process_status_batch_no from #preprep
+SELECT 1.00 department_level, sample_no, analysis_process_code, analysis_process_code_bkcc, department_no, process_status_batch_no, f.process_status_code, s.batch_status_rank
+FROM #preprep_status1 f
+INNER JOIN #batch_status s on s.process_status_code = f.process_status_code
 UNION
-SELECT 2.00 department_level, sample_no, analysis_process_code, analysis_process_code_bkcc, department_no, process_status_batch_no FROM #prep
+SELECT 1.00 department_level, sample_no, analysis_process_code, analysis_process_code_bkcc, department_no, process_status_batch_no, f.process_status_code, s.batch_status_rank
+FROM #prep_status1 f
+INNER JOIN #batch_status s on s.process_status_code = f.process_status_code
 UNION
-SELECT 3.00 department_level, sample_no, analysis_process_code, analysis_process_code_bkcc, department_no, process_status_batch_no FROM #analytical)
+SELECT 3.00 department_level, sample_no, analysis_process_code, analysis_process_code_bkcc, department_no, process_status_batch_no, f.process_status_code, s.batch_status_rank 
+FROM #analytical_status1 f
+INNER JOIN #batch_status s on s.process_status_code = f.process_status_code )
+,allbatchrank AS ( 
+SELECT o.sample_no, o.analysis_process_code, analysis_process_code_bkcc, process_status_batch_no, department_no, MAX(batch_status_rank) batch_status_rank
+FROM allbatch o
+GROUP BY o.sample_no, o.analysis_process_code,analysis_process_code_bkcc,  process_status_batch_no,  department_no )
+
+SELECT o.sample_no, o.analysis_process_code, o.analysis_process_code_bkcc,  o.department_no, d.department_level,   o.process_status_batch_no
+INTO #allbatch
+FROM allbatchrank o
+INNER JOIN mas.department_type d on d.department_no = o.department_no
+WHERE o.batch_status_rank = (SELECT MAX(batch_status_rank) FROM  allbatchrank i WHERE i.sample_no = o.sample_no and i.analysis_process_code = o.analysis_process_code and i.department_no = o.department_no)
 
 SELECT sample_no, analysis_process_code, analysis_process_code_bkcc, [1.00],  [2.00], [3.00]
 INTO #three
 FROM (
 SELECT CASE WHEN department_no = 101 THEN 1 ELSE department_level END department_level, 
        sa.sample_no, sa.analysis_process_code, sa.analysis_process_code_bkcc,  process_status_batch_no
-FROM allbatch f
+FROM #allbatch f
 INNER JOIN #sample_analysis_process sa on sa.sample_no = f.sample_no and sa.analysis_process_code =f.analysis_process_code and sa.analysis_process_code_bkcc = f.analysis_process_code_bkcc
  GROUP BY department_level, department_no,  sa.sample_no, sa.analysis_process_code, sa.analysis_process_code_bkcc, process_status_batch_no
  ) AS SourceTable
-PIVOT (max(process_status_batch_no)
+PIVOT (MIN(process_status_batch_no)
 FOR department_level in ([1.00], [2.00],[3.00])) as Pivottable  
 WHERE COALESCE([1.00] ,[2.00],[3.00]) IS NOT NULL
 

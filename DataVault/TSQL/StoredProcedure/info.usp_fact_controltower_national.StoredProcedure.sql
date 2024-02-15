@@ -253,29 +253,31 @@ INNER JOIN #batch_status ON #batch_status.process_status_code = ts.process_statu
 WHERE ISNULL(s.lasttool,'lasttool') != 'PREPLOGINTOOL'  --6951440  03:27
 CREATE INDEX #batch_status_rank_IDX1  on #batch_status_rank(hk_h_test, hk_h_department,  department_no, process_status_date, process_status_batch_no, process_status_code)  --  00:24
 
-SELECT td.hk_h_test ,td.test_no,  td.test_no_bkcc, td.hk_h_department, td.department_no ,  r.process_status_code, r.process_status_date, r.process_status_batch_no ,td.department_level, td.department_type, td.hk_h_analysis_process, td.analysis_process_code, td.analysis_process_code_bkcc
+SELECT td.hk_h_test ,td.test_no,  td.test_no_bkcc, td.hk_h_department, td.department_no , 
+	   ISNULL(r.process_status_code,td.process_status_code) process_status_code, ISNULL(r.process_status_date,td.process_status_date) process_status_date, ISNULL(r.process_status_batch_no,td.process_status_batch_no) process_status_batch_no,
+	   td.department_level, td.department_type, td.hk_h_analysis_process, td.analysis_process_code, td.analysis_process_code_bkcc
 INTO #test_department_batch_status
 FROM #test_department_batch td 
-INNER JOIN #batch_status_rank r on r.hk_h_test = td.hk_h_test AND  r.hk_h_department = td.hk_h_department and r.department_no = td.department_no  
-WHERE batch_status_date_rank = 1 AND batch_status_date_dup_row_no  = 1    --3549257  00:16
+LEFT JOIN #batch_status_rank r on r.hk_h_test = td.hk_h_test AND  r.hk_h_department = td.hk_h_department and r.department_no = td.department_no  
+                              AND batch_status_date_rank = 1 AND batch_status_date_dup_row_no  = 1    --3549257  00:16
 CREATE  INDEX #test_department_batch_status_IDX1 on #test_department_batch_status(hk_h_test, test_no, test_no_bkcc, hk_h_department,  department_no, process_status_date, process_status_batch_no, process_status_code)   -- 0015
 
 -- overwrite orderdetail data with ordertrack if there
 UPDATE t
-SET process_status_code = s.process_status_code,
-	process_status_date = s.process_status_date,
-	process_status_batch_no = s.process_status_batch_no  
+SET process_status_code = ISNULL(s.process_status_code, t.process_status_code),
+	process_status_date = ISNULL(s.process_status_date, t.process_status_date),
+	process_status_batch_no = ISNULL(s.process_status_batch_no, t.process_status_batch_no)
 FROM #test_department_batch t 
 INNER JOIN #test_department_batch_status s on s.hk_h_test = t.hk_h_test and s.hk_h_department = t.hk_h_department 
   AND s.department_no = t.department_no  and s.process_status_batch_no = t.process_status_batch_no  
 WHERE s.process_status_date = (SELECT MAX(process_status_date) process_status_date 
                                  FROM #test_department_batch_status i 
                                 WHERE i.hk_h_test = s.hk_h_test and i.hk_h_department = s.hk_h_department AND i.hk_h_analysis_process = s.hk_h_analysis_process AND i.process_status_batch_no = s.process_status_batch_no)
-AND NOT (t.process_status_code = s.process_status_code AND
-	     t.process_status_date = s.process_status_date AND
-	     t.process_status_batch_no = s.process_status_batch_no)
-AND NOT (t.department_no = 2 and t.department_level = 3)   -- 3364074 00:33
-
+  AND NOT (t.department_no = 2 and t.department_level = 3)   -- 3364074 00:33
+  AND NOT (t.process_status_code = s.process_status_code AND
+	       t.process_status_date = s.process_status_date AND
+	       t.process_status_batch_no = s.process_status_batch_no )
+		   
 -- reset analytical batch if prep_batch is different and driving 
 UPDATE tdb
 SET process_status_batch_no = tb.process_status_batch_no
