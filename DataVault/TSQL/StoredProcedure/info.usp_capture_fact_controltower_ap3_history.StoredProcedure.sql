@@ -1,7 +1,7 @@
-/****** Object:  StoredProcedure [info].[usp_capture_fact_controltower_ap3_history]    Script Date: 2/5/2024 10:41:23 AM ******/
+/****** Object:  StoredProcedure [info].[usp_capture_fact_controltower_ap3_history]    Script Date: 2/26/2024 11:24:52 AM ******/
 DROP PROCEDURE [info].[usp_capture_fact_controltower_ap3_history]
 GO
-/****** Object:  StoredProcedure [info].[usp_capture_fact_controltower_ap3_history]    Script Date: 2/5/2024 10:41:24 AM ******/
+/****** Object:  StoredProcedure [info].[usp_capture_fact_controltower_ap3_history]    Script Date: 2/26/2024 11:24:52 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -134,7 +134,7 @@ SELECT @data_asof_date
       ,[Second Review Complete]
       ,[Analysis Instrument]
       ,[Location]
-      ,[Analysis Dept Attempt Count]
+      ,[Analysis Attempt Count]
       ,[Reporting Dept Nbr]
       ,[Reporting Dept Abbrev]
       ,[Reporting Dept Lims Status]

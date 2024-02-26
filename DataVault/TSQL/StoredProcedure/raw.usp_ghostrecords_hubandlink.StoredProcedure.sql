@@ -1,7 +1,7 @@
-/****** Object:  StoredProcedure [raw].[usp_ghostrecords_hubandlink]    Script Date: 1/30/2024 2:45:18 PM ******/
+/****** Object:  StoredProcedure [raw].[usp_ghostrecords_hubandlink]    Script Date: 2/26/2024 11:24:52 AM ******/
 DROP PROCEDURE [raw].[usp_ghostrecords_hubandlink]
 GO
-/****** Object:  StoredProcedure [raw].[usp_ghostrecords_hubandlink]    Script Date: 1/30/2024 2:45:19 PM ******/
+/****** Object:  StoredProcedure [raw].[usp_ghostrecords_hubandlink]    Script Date: 2/26/2024 11:24:52 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

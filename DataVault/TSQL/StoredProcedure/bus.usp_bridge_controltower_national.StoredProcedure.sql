@@ -1,7 +1,7 @@
-/****** Object:  StoredProcedure [bus].[usp_bridge_controltower_national]    Script Date: 2/5/2024 10:41:23 AM ******/
+/****** Object:  StoredProcedure [bus].[usp_bridge_controltower_national]    Script Date: 2/26/2024 11:24:52 AM ******/
 DROP PROCEDURE [bus].[usp_bridge_controltower_national]
 GO
-/****** Object:  StoredProcedure [bus].[usp_bridge_controltower_national]    Script Date: 2/5/2024 10:41:23 AM ******/
+/****** Object:  StoredProcedure [bus].[usp_bridge_controltower_national]    Script Date: 2/26/2024 11:24:52 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -32,6 +32,7 @@ SELECT   l_test_product.hk_l_test_product AS hk_l_test_product
 	INNER JOIN raw.[h_product] h_product  ON l_test_product.hk_h_product = h_product.hk_h_product
 	INNER JOIN raw.[l_test_sample] l_test_sample ON l_test_sample.hk_h_test = h_test.hk_h_test
 	INNER JOIN raw.[h_sample] h_sample  ON l_test_sample.hk_h_sample = h_sample.hk_h_sample
+
 
 RETURN 
 

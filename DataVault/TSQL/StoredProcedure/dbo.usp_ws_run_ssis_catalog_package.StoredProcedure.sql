@@ -1,4 +1,7 @@
-/****** Object:  StoredProcedure [dbo].[usp_ws_run_ssis_catalog_package]    Script Date: 12/22/2023 10:19:36 AM ******/
+/****** Object:  StoredProcedure [dbo].[usp_ws_run_ssis_catalog_package]    Script Date: 2/26/2024 11:24:52 AM ******/
+DROP PROCEDURE [dbo].[usp_ws_run_ssis_catalog_package]
+GO
+/****** Object:  StoredProcedure [dbo].[usp_ws_run_ssis_catalog_package]    Script Date: 2/26/2024 11:24:52 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -70,7 +73,7 @@ SELECT  @folder  = (SELECT Item FROM dbo.ufn_split_string (@param_string,@delimi
       
 SELECT @environment_id   = 2--(SELECT reference_id FROM [SSISDB].[catalog].[environment_references] WHERE environment_name = @environment_name  AND environment_folder_name = @folder)  
 SELECT
-@environment_name = 'testenv'-- CASE WHEN @environment_name IS NULL THEN 1 ELSE @environment_name END
+@environment_name = 'DataVault_test'-- CASE WHEN @environment_name IS NULL THEN 1 ELSE @environment_name END
 	  ,@logging_level = CASE WHEN @logging_level IS NULL THEN 1 ELSE @logging_level END
 	 , @syncronised_exec = CASE WHEN @syncronised_exec IS NULL THEN 1 ELSE @syncronised_exec END  
 
