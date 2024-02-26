@@ -1,13 +1,13 @@
-/****** Object:  StoredProcedure [psa].[load_national_to_persist]    Script Date: 2/8/2024 9:19:56 AM ******/
+/****** Object:  StoredProcedure [psa].[load_national_to_persist]    Script Date: 2/26/2024 11:37:11 AM ******/
 DROP PROCEDURE [psa].[load_national_to_persist]
 GO
-/****** Object:  StoredProcedure [psa].[load_national_to_persist]    Script Date: 2/8/2024 9:19:56 AM ******/
+/****** Object:  StoredProcedure [psa].[load_national_to_persist]    Script Date: 2/26/2024 11:37:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
  
-CREATE       PROC [psa].[load_national_to_persist]
+CREATE    PROC [psa].[load_national_to_persist]
 AS
 -- exec  psa.load_national_to_persist
 

@@ -1,7 +1,7 @@
-/****** Object:  StoredProcedure [dbo].[usp_ws_run_ssis_catalog_package]    Script Date: 2/8/2024 9:19:56 AM ******/
+/****** Object:  StoredProcedure [dbo].[usp_ws_run_ssis_catalog_package]    Script Date: 2/26/2024 11:37:11 AM ******/
 DROP PROCEDURE [dbo].[usp_ws_run_ssis_catalog_package]
 GO
-/****** Object:  StoredProcedure [dbo].[usp_ws_run_ssis_catalog_package]    Script Date: 2/8/2024 9:19:56 AM ******/
+/****** Object:  StoredProcedure [dbo].[usp_ws_run_ssis_catalog_package]    Script Date: 2/26/2024 11:37:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -71,9 +71,9 @@ SELECT  @folder  = (SELECT Item FROM dbo.ufn_split_string (@param_string,@delimi
 , @logging_level    = (SELECT ISNULL(Item,1) FROM dbo.ufn_split_string (@param_string,@delimiter) WHERE Ordinal = 5)  -- default logging = basic (1)
 , @syncronised_exec = (SELECT ISNULL(Item,1) FROM dbo.ufn_split_string (@param_string,@delimiter) WHERE Ordinal = 6) -- default sync = true (1)  
       
-SELECT @environment_id   = 2--(SELECT reference_id FROM [SSISDB].[catalog].[environment_references] WHERE environment_name = @environment_name  AND environment_folder_name = @folder)  
+SELECT @environment_id   = 4--(SELECT reference_id FROM [SSISDB].[catalog].[environment_references] WHERE environment_name = @environment_name  AND environment_folder_name = @folder)  
 SELECT
-@environment_name = 'testenv'-- CASE WHEN @environment_name IS NULL THEN 1 ELSE @environment_name END
+@environment_name = 'DataVault_dev_incremental'-- CASE WHEN @environment_name IS NULL THEN 1 ELSE @environment_name END
 	  ,@logging_level = CASE WHEN @logging_level IS NULL THEN 1 ELSE @logging_level END
 	 , @syncronised_exec = CASE WHEN @syncronised_exec IS NULL THEN 1 ELSE @syncronised_exec END  
 
@@ -169,5 +169,4 @@ SET @p_return_msg = 'usp_ws_run_ssis_catalog_package completed. '    + @v_return
 RETURN 0
 
   
-
 GO

@@ -1,4 +1,7 @@
-/****** Object:  StoredProcedure [raw].[usp_truncate_adp]    Script Date: 12/15/2023 2:05:50 PM ******/
+/****** Object:  StoredProcedure [raw].[usp_truncate_adp]    Script Date: 2/26/2024 11:37:11 AM ******/
+DROP PROCEDURE [raw].[usp_truncate_adp]
+GO
+/****** Object:  StoredProcedure [raw].[usp_truncate_adp]    Script Date: 2/26/2024 11:37:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
