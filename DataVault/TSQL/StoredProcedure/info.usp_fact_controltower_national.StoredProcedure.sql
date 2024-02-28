@@ -1,13 +1,14 @@
-/****** Object:  StoredProcedure [info].[usp_fact_controltower_national]    Script Date: 2/26/2024 11:24:52 AM ******/
+/****** Object:  StoredProcedure [info].[usp_fact_controltower_national]    Script Date: 2/28/2024 12:15:53 PM ******/
 DROP PROCEDURE [info].[usp_fact_controltower_national]
 GO
-/****** Object:  StoredProcedure [info].[usp_fact_controltower_national]    Script Date: 2/26/2024 11:24:52 AM ******/
+/****** Object:  StoredProcedure [info].[usp_fact_controltower_national]    Script Date: 2/28/2024 12:15:53 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+ 
 
-CREATE PROCEDURE [info].[usp_fact_controltower_national] @work_order_no varchar(50) = NULL
+CREATE   PROCEDURE [info].[usp_fact_controltower_national] @work_order_no varchar(50) = NULL
 AS 
  
 -- exec info.usp_fact_controltower_national 'L1699291' -- 'L1663905'-- 'L1691793'--'L1695717' --'L1665725'
@@ -422,10 +423,13 @@ SELECT  isnull(w.work_order_no, left(sample_no,8)) work_order_no,
 		sinvoice.original_invoice_date, 
 		sinvoice.invoicedate,
 		batch_no_cnt,
-		CASE LEFT(product_code_base,3) WHEN 'ALL' THEN 75  ELSE 80  END operating_lab, 
-	    n.on_behalf_of_lab_no,
-		n2.on_behalf_of_lab_no subout_lab_no
-		,0 warning_no
+		CASE LEFT(product_code_base,3) WHEN 'ALL' THEN '75'  
+									   WHEN	'COR' THEN '75'
+								   	   WHEN 'FTW' THEN '75'
+		                               WHEN 'DEC' THEN '76'
+									   WHEN 'VIC' THEN '77' 
+									   ELSE '80'  END  operating_lab, 
+		0 warning_no
 INTO info.fact_controltower_national
 FROM #test_department_batch batch_grain 
 INNER JOIN raw.h_department d  on d.hk_h_department = batch_grain.hk_h_department  
@@ -444,10 +448,6 @@ LEFT JOIN #tempcapturedates capture on capture.hk_h_test = batch_grain.hk_h_test
 LEFT JOIN #temppreprep preprep on preprep.product_code = batch_grain.product_code_base and preprep.product_code_bkcc = batch_grain.matnum_base
 LEFT JOIN ref.r_seedpak_matrixdef on r_seedpak_matrixdef.matnum = batch_grain.matnum_base 
 LEFT JOIN mas.lab_reporting_group g ON g.list_type = batch_grain.analysis_process_code AND g.list_matclass = batch_grain.analysis_process_code_bkcc
-LEFT JOIN mas.work_location_map n on n.acctnum = sl.account_no and n.system_id = 'lims80' and operating_lab_no = CASE LEFT(product_code_base,3) WHEN 'ALL' THEN 75  ELSE 80  END
-LEFT JOIN ref.r_seedpak_prep_data prep on  prep.datapoint_id = 630  and prep.worknum =batch_grain.process_status_batch_no and dt.department_level = 3
-LEFT JOIN  mas.work_location_map n2 on n2.acctnum = prep.datavalue and n2.system_id = 'lims80'
-    AND n2.operating_lab_no = CASE WHEN LEFT(product_code_base,3) = 'ALL' THEN 75 ELSE 80 end
 
 UPDATE f
 SET warning_no = 1
