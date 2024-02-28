@@ -47,7 +47,7 @@ SELECT  CASE WHEN sil.charge >= 0 THEN 'Invoice' ELSE 'Credit' END [Accounting T
 		CAST(CASE WHEN cir.ir_customer_no IS NOT NULL THEN 0 ELSE 1 END AS Bit) [Is Owner or Standard],
 		CAST(0 AS Bit) [Is Pan File],
 		CAST(0 AS Bit) [Is SISOSUB],
-		LEFT(LTRIM(b.pace_account_no) ,2) Lab,
+		RIGHT(b.tenant_id,2) Lab,
 		COALESCE(sil.location,'Blank Location') Location,
 		'1900-01-01' [Login Date],
 		 COALESCE(market.Market, 'Blank Market') Market, 

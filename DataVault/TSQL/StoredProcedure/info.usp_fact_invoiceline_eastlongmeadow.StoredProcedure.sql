@@ -34,7 +34,7 @@ SELECT CASE WHEN (stw.price * stw.surcharge/ 100) + stw.price < 0 THEN 'Credit' 
 		 CAST(CASE WHEN cir.ir_customer_no IS NOT NULL THEN 0 ELSE 1 END AS Bit) [Is Owner or Standard],
 		 CAST(0 AS Bit) [Is Pan File],
 		 CAST(0 AS Bit) [Is SISOSUB],
-		 COALESCE(LEFT(LTRIM(NULLIF(h_pace_account.pace_account_no,'')) ,2),'-1') Lab,
+		 RIGHT(b.tenant_id,2) Lab,
 		 COALESCE(NULLIF(sprw.Location, ''),'-1') Location,
 		 COALESCE(ssw.samplereceived,'1900-01-01') [Login Date],
 		 COALESCE(NULLIF(sprw.projecttype,''), '-1') Market,
@@ -43,7 +43,7 @@ SELECT CASE WHEN (stw.price * stw.surcharge/ 100) + stw.price < 0 THEN 'Credit' 
 		 COALESCE(LTRIM(RTRIM(h_product.product_code)),'-1') Product, 
 		 'lims57' [Source Name],
 		'-1' TAT,
-	    'placeholder' [TAT Code],
+	     b.tenant_id [TAT Code],
 		 1 Volume, 
 		 b.sample_no+'|'+h_work_order.work_order_no [Word Order Desc],
 		 CAST(ROUND(siw.invoicetotal,2) AS DECIMAL(12,2)) total_amt 
